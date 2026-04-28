@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsiRef — Referência Clínica Psiquiátrica</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #1c2333;
+  --bg4: #212936;
+  --border: rgba(139,185,255,0.10);
+  --border2: rgba(139,185,255,0.18);
+  --text: #e8edf5;
+  --text2: #8b9bb4;
+  --text3: #5a6a80;
+  --accent: #4a90d9;
+  --accent2: #2d6fa8;
+  --accent-glow: rgba(74,144,217,0.15);
+  --teal: #2ecba0;
+  --teal-bg: rgba(46,203,160,0.08);
+  --amber: #f5a623;
+  --amber-bg: rgba(245,166,35,0.08);
+  --red: #e55b5b;
+  --red-bg: rgba(229,91,91,0.08);
+  --green: #4caf82;
+  --green-bg: rgba(76,175,130,0.08);
+  --purple: #9b7de8;
+  --purple-bg: rgba(155,125,232,0.08);
+  --group-colors: #4a90d9,#2ecba0,#9b7de8,#f5a623,#e55b5b,#4caf82,#e88fad,#7ab8e8,#c4a862,#8ecfc4,#d4876b,#6bc9e0,#b8a0e8,#e8c47a,#91d47c,#e87a7a,#7ac4d4,#c4a0c8,#d4c080,#8ab8d4;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: white;
+}
+.logo h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+.logo span {
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 300;
+  display: block;
+  line-height: 1;
+}
+.search-wrap {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+}
+#searchInput {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  padding: 9px 12px 9px 38px;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.2s;
+}
+#searchInput:focus { border-color: var(--accent); }
+#searchInput::placeholder { color: var(--text3); }
+
+/* MAIN */
+.main {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+.dsm-note {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--amber);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.dsm-note strong { color: var(--amber); }
+
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.stat {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stat strong { color: var(--text); font-size: 18px; font-weight: 500; }
+
+/* GROUPS */
+.groups-list { display: flex; flex-direction: column; gap: 10px; }
+
+.group-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.group-block.open { border-color: var(--border2); }
+
+.group-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.group-header:hover { background: var(--bg3); }
+.group-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.group-title {
+  flex: 1;
+}
+.group-title h2 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.3;
+}
+.group-title span {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+  display: block;
+}
+.group-arrow {
+  color: var(--text3);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.group-block.open .group-arrow { transform: rotate(90deg); }
+
+.group-body {
+  display: none;
+  border-top: 1px solid var(--border);
+}
+.group-block.open .group-body { display: block; }
+
+/* DISORDERS */
+.disorder-item {
+  border-bottom: 1px solid var(--border);
+}
+.disorder-item:last-child { border-bottom: none; }
+
+.disorder-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px 11px 24px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.disorder-header:hover { background: var(--bg3); }
+.disorder-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.4;
+}
+.codes {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.code {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.code-10 {
+  background: var(--accent-glow);
+  color: var(--accent);
+  border: 1px solid rgba(74,144,217,0.2);
+}
+.code-11 {
+  background: var(--teal-bg);
+  color: var(--teal);
+  border: 1px solid rgba(46,203,160,0.2);
+}
+.d-arrow {
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.disorder-item.open .d-arrow { transform: rotate(90deg); }
+
+/* DETAIL PANEL */
+.disorder-body {
+  display: none;
+  padding: 0 16px 16px 24px;
+}
+.disorder-item.open .disorder-body { display: block; }
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* CRITERIA */
+.criteria-section {
+  margin-bottom: 14px;
+}
+.criteria-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.criteria-label::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.criteria-label.req::before { background: var(--accent); }
+.criteria-label.alt::before { background: var(--teal); }
+.criteria-label.exc::before { background: var(--red); }
+.criteria-label.dur::before { background: var(--amber); }
+.criteria-label.imp::before { background: var(--purple); }
+
+.crit-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.crit-list li {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.55;
+  padding: 8px 12px;
+  background: var(--bg3);
+  border-radius: 6px;
+  border-left: 3px solid var(--border2);
+  position: relative;
+}
+.crit-list.req-list li { border-left-color: rgba(74,144,217,0.4); }
+.crit-list.alt-list li { border-left-color: rgba(46,203,160,0.4); }
+.crit-list.exc-list li { border-left-color: rgba(229,91,91,0.4); }
+.crit-list.dur-list li { border-left-color: rgba(245,166,35,0.4); }
+.crit-list.imp-list li { border-left-color: rgba(155,125,232,0.4); }
+.crit-num {
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 4px;
+}
+
+/* QUESTIONS */
+.q-list { display: flex; flex-direction: column; gap: 8px; }
+.q-item {
+  background: var(--teal-bg);
+  border: 1px solid rgba(46,203,160,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.q-category {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 4px;
+}
+.q-text {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* EMPTY PLACEHOLDER */
+.placeholder {
+  font-size: 12px;
+  color: var(--text3);
+  font-style: italic;
+  padding: 12px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+}
+
+/* SEARCH RESULTS */
+.search-results { display: flex; flex-direction: column; gap: 6px; }
+.search-result {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.search-result:hover { border-color: var(--accent); background: var(--bg3); }
+.sr-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.sr-group { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.sr-codes { display: flex; gap: 6px; }
+.no-results { text-align: center; color: var(--text3); font-size: 14px; padding: 40px; }
+
+mark {
+  background: rgba(74,144,217,0.3);
+  color: var(--accent);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+@media (max-width: 600px) {
+  .codes { display: none; }
+  .disorder-name { font-size: 13px; }
+  .stats-row { gap: 8px; }
+  .stat { padding: 8px 12px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">Ψ</div>
+      <div>
+        <h1>PsiRef</h1>
+        <span>DSM-5-TR · CID-10 · CID-11</span>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar transtorno..." autocomplete="off">
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="dsm-note">
+    <strong>Nota de uso:</strong> Este material foi elaborado como ferramenta auxiliar para consulta rápida em contexto clínico. Os critérios apresentados são resumos didáticos baseados no DSM-5-TR e devem ser complementados com a leitura integral da obra original. Para uso pessoal e educacional.
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><strong id="statGroups">21</strong> grupos</div>
+    <div class="stat"><strong id="statDisorders">0</strong> transtornos</div>
+    <div class="stat" style="color: var(--accent); border-color: rgba(74,144,217,0.2);">DSM-5-TR 2022</div>
+  </div>
+
+  <div id="groupsContainer" class="groups-list"></div>
+  <div id="searchContainer" style="display:none;">
+    <div id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {
+    id: 1,
+    title: "Transtornos do Neurodesenvolvimento",
+    color: "#4a90d9",
+    disorders: [
+      {
+        name: "Transtorno do Déficit de Atenção/Hiperatividade (TDAH)",
+        cid10: "F90.0",
+        cid11: "6A05",
+        criteria: {
+          required: [
+            { text: "Padrão persistente de desatenção e/ou hiperatividade-impulsividade que interfere no funcionamento ou desenvolvimento" },
+            { text: "Desatenção: ≥6 sintomas (≥5 em adultos) por ≥6 meses: erros por descuido, dificuldade em manter atenção, não ouve quando falado diretamente, não segue instruções, dificuldade em organizar tarefas, evita tarefas sustentadas, perde objetos, distrai-se facilmente, esquecimento em atividades diárias" },
+            { text: "Hiperatividade-Impulsividade: ≥6 sintomas (≥5 em adultos) por ≥6 meses: agita mãos/pés, levanta da cadeira, corre/sobe em momentos inapropriados, não consegue brincar em silêncio, 'a mil', fala excessivamente, responde antes da pergunta terminar, dificuldade em aguardar a vez, interrompe outros" }
+          ],
+          duration: [
+            { text: "Vários sintomas estavam presentes antes dos 12 anos de idade" },
+            { text: "Vários sintomas presentes em dois ou mais contextos (casa, escola, trabalho)" },
+            { text: "Evidências de que os sintomas interferem na qualidade do funcionamento social, acadêmico ou profissional" }
+          ],
+          exclusions: [
+            { text: "Os sintomas não ocorrem exclusivamente durante esquizofrenia ou outro transtorno psicótico" },
+            { text: "Não são mais bem explicados por outro transtorno mental (ansiedade, dissociativo, personalidade, etc.)" }
+          ]
+        },
+        questions: [
+          { cat: "Início na infância", text: "Você tinha dificuldade de prestar atenção na escola desde criança? Seus professores ou pais reclamavam que você era agitado ou disperso?" },
+          { cat: "Desatenção", text: "Com que frequência você começa uma tarefa e não consegue terminá-la? Perde objetos com frequência? Esquecer compromissos importantes é comum para você?" },
+          { cat: "Hiperatividade", text: "Você se sente inquieto internamente, como se precisasse estar sempre em movimento? Tem dificuldade em ficar sentado por longos períodos?" },
+          { cat: "Impulsividade", text: "Você costuma agir sem pensar nas consequências? Interrompe conversas com frequência sem perceber?" },
+          { cat: "Comprometimento funcional", text: "Essas dificuldades afetam seu trabalho, relacionamentos ou vida doméstica? Como é sua organização financeira e de tarefas?" },
+          { cat: "Rastreio de comorbidades", text: "Você já foi diagnosticado com ansiedade, depressão ou uso de substâncias? (Alta comorbidade com TDAH)" }
+        ]
+      },
+      {
+        name: "Transtorno do Espectro Autista (TEA)",
+        cid10: "F84.0",
+        cid11: "6A02",
+        criteria: {
+          required: [
+            { text: "Déficits persistentes na comunicação e interação social: déficits em reciprocidade socioemocional; déficits em comportamentos comunicativos não-verbais; déficits em desenvolver, manter e compreender relacionamentos" },
+            { text: "Padrões restritos e repetitivos de comportamento: movimentos motores, uso de objetos ou fala estereotipados; insistência na mesmice, inflexibilidade, rituais; interesses altamente restritos e fixos com intensidade anormal; hiper ou hiporreatividade a estímulos sensoriais" }
+          ],
+          duration: [
+            { text: "Os sintomas devem estar presentes no período precoce do desenvolvimento (podem não se manifestar plenamente até que as demandas sociais excedam as capacidades)" },
+            { text: "Os sintomas causam prejuízo clinicamente significativo no funcionamento social, profissional ou em outras áreas" }
+          ],
+          exclusions: [
+            { text: "Essas perturbações não são mais bem explicadas por deficiência intelectual ou atraso global do desenvolvimento" }
+          ]
+        },
+        questions: [
+          { cat: "Desenvolvimento precoce", text: "A criança apontou com o dedo para objetos antes dos 12 meses? Balbucio e contato visual estavam presentes?" },
+          { cat: "Comunicação social", text: "Tem dificuldade em entender quando alguém está brincando ou sendo sarcástico? Prefere estar sozinho a interagir com outros?" },
+          { cat: "Interesses restritos", text: "Tem interesses muito intensos e específicos que dominam o tempo e atenção? Coleciona ou memoriza informações sobre um tema específico?" },
+          { cat: "Rigidez", text: "Mudanças na rotina causam grande angústia? Insiste em seguir a mesma rota, horário ou sequência de atividades?" },
+          { cat: "Sensorialidade", text: "É muito sensível a sons, texturas, cheiros ou luzes? Ou ao contrário, parece não sentir dor ou não perceber estímulos?" }
+        ]
+      },
+      {
+        name: "Deficiência Intelectual",
+        cid10: "F70-F79",
+        cid11: "6A00",
+        criteria: {
+          required: [
+            { text: "Déficits em funções intelectuais (raciocínio, resolução de problemas, planejamento, pensamento abstrato, julgamento, aprendizagem acadêmica e aprendizagem pela experiência)" },
+            { text: "Déficits em funções adaptativas em um ou mais domínios (comunicação, participação social, vida independente, responsabilidade pessoal)" }
+          ],
+          duration: [{ text: "O início ocorre durante o período do desenvolvimento" }],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Desenvolvimento", text: "Houve atraso nas aquisições do desenvolvimento (fala, marcha, controle esfincteriano) comparado a outras crianças?" },
+          { cat: "Funcionalidade", text: "Consegue cuidar de si mesmo (higiene, alimentação, finanças) de forma independente? Qual o nível de supervisão necessário?" }
+        ]
+      },
+      {
+        name: "Transtorno Específico da Aprendizagem",
+        cid10: "F81",
+        cid11: "6A03",
+        criteria: {
+          required: [
+            { text: "Dificuldades na aprendizagem e no uso de habilidades acadêmicas por ≥6 meses, apesar de intervenções dirigidas a essas dificuldades (leitura imprecisa ou lenta, dificuldade de compreensão, erros ortográficos, dificuldade na expressão escrita, dificuldade com senso numérico, cálculo ou raciocínio matemático)" },
+            { text: "As habilidades acadêmicas afetadas são substancialmente abaixo do esperado para a idade e causam interferência significativa" },
+            { text: "As dificuldades de aprendizagem iniciam-se durante os anos de escolarização" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não é melhor explicado por deficiência intelectual, acuidade visual/auditiva não corrigida, outros transtornos mentais, adversidade psicossocial, instrução inadequada" }]
+        },
+        questions: [
+          { cat: "Leitura", text: "Tem dificuldade em ler em voz alta, troca ou omite letras, lê muito devagar para a idade?" },
+          { cat: "Escrita", text: "Comete muitos erros ortográficos, tem letra ilegível, dificuldade em estruturar frases escritas?" },
+          { cat: "Matemática", text: "Tem dificuldade em contar, memorizar tabuada, entender conceitos matemáticos?" }
+        ]
+      },
+      {
+        name: "Transtorno de Tiques / Síndrome de Tourette",
+        cid10: "F95.2",
+        cid11: "8A05.00",
+        criteria: {
+          required: [
+            { text: "Tiques motores múltiplos E pelo menos um tique vocal (não necessariamente simultâneos)" },
+            { text: "Os tiques podem aparecer e desaparecer, mas persistem por mais de 1 ano desde o início do primeiro tique" },
+            { text: "Início antes dos 18 anos" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não atribuíveis a efeitos fisiológicos de substâncias ou outra condição médica" }]
+        },
+        questions: [
+          { cat: "Fenomenologia", text: "Os tiques são precedidos por uma sensação de urgência que alivia após o tique? Consegue suprimi-los por algum tempo?" },
+          { cat: "Intensidade", text: "Os tiques causam prejuízo social, escolar ou ocupacional? Foram piores em algum período específico?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "Espectro da Esquizofrenia e Outros Transtornos Psicóticos",
+    color: "#9b7de8",
+    disorders: [
+      {
+        name: "Esquizofrenia",
+        cid10: "F20.9",
+        cid11: "6A20",
+        criteria: {
+          required: [
+            { text: "≥2 dos seguintes sintomas por parte significativa de 1 mês (ou menos se tratado com êxito), sendo que ao menos 1 deles deve ser (1), (2) ou (3):\n1. Delírios\n2. Alucinações\n3. Discurso desorganizado\n4. Comportamento grosseiramente desorganizado ou catatônico\n5. Sintomas negativos (expressão emocional diminuída, avolia)" }
+          ],
+          duration: [
+            { text: "Sinais contínuos do transtorno persistem por ≥6 meses (incluindo pelo menos 1 mês de sintomas da Fase Ativa)" },
+            { text: "Funcionamento em trabalho, relações interpessoais ou autocuidado está marcadamente abaixo do nível anterior ao início" }
+          ],
+          exclusions: [
+            { text: "Excluir transtorno esquizoafetivo e transtorno depressivo ou bipolar com características psicóticas" },
+            { text: "Não atribuível a efeitos de substâncias ou outra condição médica" },
+            { text: "Se há história de TEA ou transtorno de comunicação na infância, a esquizofrenia é diagnosticada somente se delírios ou alucinações proeminentes persistem por ≥1 mês" }
+          ]
+        },
+        questions: [
+          { cat: "Delírios", text: "Você sente que outras pessoas estão tramando algo contra você? Acredita ter poderes ou missões especiais? Sente que mensagens da TV ou rádio são destinadas a você?" },
+          { cat: "Alucinações", text: "Você ouve vozes quando não há ninguém por perto? As vozes comentam suas ações ou conversam entre si? Vê coisas que outros não conseguem ver?" },
+          { cat: "Desorganização", text: "Pessoas reclamam que você fala de forma confusa ou que pula de assunto sem conexão? Já ficou imóvel ou muito agitado sem razão aparente?" },
+          { cat: "Sintomas negativos", text: "Você tem sentido pouco prazer ou interesse nas coisas que antes gostava? Tem saído menos de casa, falado menos, expressado menos emoções?" },
+          { cat: "Curso e funcionalidade", text: "Quando começaram esses sintomas? Você consegue trabalhar, estudar, cuidar de si mesmo? Usa medicação?" },
+          { cat: "Insight", text: "Você acredita que esses pensamentos ou percepções podem ser sintomas de uma doença mental?" }
+        ]
+      },
+      {
+        name: "Transtorno Esquizofreniforme",
+        cid10: "F20.8",
+        cid11: "6A21",
+        criteria: {
+          required: [
+            { text: "Critério A da Esquizofrenia preenchido: ≥2 sintomas (delírios, alucinações, discurso desorganizado, comportamento desorganizado, sintomas negativos)" },
+            { text: "Duração de ≥1 mês e <6 meses (incluindo fases prodrômica, ativa e residual)" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Excluir transtorno esquizoafetivo e transtornos do humor com características psicóticas; excluir substâncias e condições médicas" }]
+        },
+        questions: [
+          { cat: "Duração", text: "Há quanto tempo exatamente esses sintomas começaram? (Diferenciação essencial com esquizofrenia)" },
+          { cat: "Psicose", text: "Mesmo conjunto de perguntas sobre alucinações e delírios da esquizofrenia" }
+        ]
+      },
+      {
+        name: "Transtorno Esquizoafetivo",
+        cid10: "F25.9",
+        cid11: "6A22",
+        criteria: {
+          required: [
+            { text: "Um período ininterrupto de doença durante o qual há um episódio maior do humor (maníaco ou depressivo maior) concomitantemente com o Critério A da Esquizofrenia" },
+            { text: "Delírios ou alucinações por ≥2 semanas na ausência de episódio maior do humor durante o curso da doença" },
+            { text: "Sintomas que preenchem critério para episódio maior do humor estão presentes pela maior parte da duração total da doença ativa e residual" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não atribuível a substâncias ou condição médica" }]
+        },
+        questions: [
+          { cat: "Dissociação temporal", text: "Os sintomas psicóticos ocorrem também fora dos períodos de humor alterado, ou apenas quando está muito deprimido/eufórico?" },
+          { cat: "Humor vs. Psicose", text: "Quando está mais equilibrado emocionalmente, as vozes e os delírios continuam presentes?" }
+        ]
+      },
+      {
+        name: "Transtorno Delirante",
+        cid10: "F22",
+        cid11: "6A24",
+        criteria: {
+          required: [
+            { text: "Presença de 1 ou mais delírios por ≥1 mês" },
+            { text: "Critério A da Esquizofrenia nunca foi preenchido (alucinações, se presentes, não são proeminentes e estão relacionadas ao tema delirante)" },
+            { text: "Funcionamento não marcadamente prejudicado; comportamento não obviamente bizarro" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Excluir episódios maníacos/depressivos maiores concomitantes" },
+            { text: "Não atribuível a substâncias, condição médica ou outro transtorno psicótico" }
+          ]
+        },
+        questions: [
+          { cat: "Tipo de delírio", text: "Você tem a convicção de que alguém o persegue (persecutório), de que seu cônjuge é infiel (ciúme), de ter poderes especiais (grandioso), de ter uma doença grave (somático), de ser amado por alguém famoso (erotomaníaco)?" },
+          { cat: "Encapsulamento", text: "Fora dessa crença específica, você consegue trabalhar, se relacionar e funcionar normalmente?" },
+          { cat: "Crítica", text: "Existe alguma possibilidade de você estar enganado sobre essa crença?" }
+        ]
+      },
+      {
+        name: "Transtorno Psicótico Breve",
+        cid10: "F23",
+        cid11: "6A23",
+        criteria: {
+          required: [
+            { text: "Presença de ≥1 dos seguintes sintomas (pelo menos 1 deve ser 1, 2 ou 3): 1. Delírios; 2. Alucinações; 3. Discurso desorganizado; 4. Comportamento grosseiramente desorganizado ou catatônico" },
+            { text: "Duração de ≥1 dia e <1 mês, com retorno ao nível pré-mórbido de funcionamento" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não mais bem explicado por outro transtorno psicótico, transtorno do humor, substâncias ou condição médica" }]
+        },
+        questions: [
+          { cat: "Gatilho", text: "Houve algum estresse intenso, privação de sono, luto ou evento traumático imediatamente antes do início?" },
+          { cat: "Duração", text: "Há quanto tempo exatamente esses sintomas estão presentes?" }
+        ]
+      },
+      {
+        name: "Catatonia",
+        cid10: "F06.1",
+        cid11: "6A40",
+        criteria: {
+          required: [
+            { text: "≥3 dos 12 seguintes sintomas: estupor, catalepsia, flexibilidade cérea, mutismo, negativismo, postura estranha, maneirismos, estereotipias, agitação, fazer caretas, ecolalia, ecopraxia" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Especificar: associada a outro transtorno mental; secundária a condição médica" }]
+        },
+        questions: [
+          { cat: "Motor", text: "O paciente mantém posições impostas pelo examinador por tempo prolongado? Responde a comandos?" },
+          { cat: "Urgência", text: "Avaliar: hidratação, nutrição, status de comunicação — risco de vida em catatonia grave" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Transtorno Bipolar e Transtornos Relacionados",
+    color: "#f5a623",
+    disorders: [
+      {
+        name: "Transtorno Bipolar I",
+        cid10: "F31.9",
+        cid11: "6A60",
+        criteria: {
+          required: [
+            { text: "Critérios preenchidos para pelo menos 1 Episódio Maníaco (duração ≥7 dias ou qualquer duração se hospitalização necessária)" },
+            { text: "Episódio Maníaco: humor anormalmente elevado, expansivo ou irritável + aumento da atividade/energia direcionada a objetivos, por ≥1 semana (quase todo dia, a maior parte do dia)" },
+            { text: "Durante o episódio maníaco, ≥3 dos seguintes (4 se o humor é apenas irritável): autoestima inflada ou grandiosidade, necessidade de sono diminuída, mais falante que o habitual, fuga de ideias, distratibilidade, atividade aumentada, comportamento impulsivo com alto potencial prejudicial (gastos, sexual, investimentos)" }
+          ],
+          duration: [{ text: "A perturbação do humor é suficientemente grave a ponto de causar prejuízo acentuado no funcionamento social ou profissional, ou necessitar hospitalização para prevenir danos" }],
+          exclusions: [
+            { text: "O episódio não é atribuível a efeitos fisiológicos de substâncias ou condição médica" },
+            { text: "Episódios maníacos ou hipomaníacos que ocorrem durante tratamento antidepressivo não devem ser contados para diagnóstico de TB I se persistirem além do efeito fisiológico do tratamento" }
+          ]
+        },
+        questions: [
+          { cat: "Mania — humor e energia", text: "Você já teve períodos em que se sentiu extremamente eufórico, cheio de energia, precisando de pouco sono e ainda assim não se sentindo cansado?" },
+          { cat: "Mania — grandiosidade e impulsividade", text: "Nesses períodos, fez gastos excessivos, decisões impulsivas nos negócios, comportamento sexual de risco? Sentia ter poderes especiais ou ser uma pessoa muito importante?" },
+          { cat: "Mania — velocidade do pensamento", text: "Seus pensamentos ficavam acelerados, falava muito, começava muitos projetos ao mesmo tempo sem terminar?" },
+          { cat: "Depressão bipolar", text: "Esses períodos de euforia foram seguidos de fases de muita tristeza, cansaço e falta de energia? Como foi esse contraste?" },
+          { cat: "Curso temporal", text: "Quantos episódios já teve? Qual a duração típica de um episódio maníaco para você? Há ciclagem sazonal?" },
+          { cat: "Antecedentes familiares", text: "Há histórico de transtorno bipolar, depressão grave ou 'loucura' na família?" }
+        ]
+      },
+      {
+        name: "Transtorno Bipolar II",
+        cid10: "F31.81",
+        cid11: "6A61",
+        criteria: {
+          required: [
+            { text: "Critérios preenchidos para pelo menos 1 Episódio Hipomaníaco E pelo menos 1 Episódio Depressivo Maior" },
+            { text: "Episódio Hipomaníaco: humor anormalmente elevado/expansivo/irritável + aumento de atividade e energia por ≥4 dias consecutivos — mesmos sintomas da mania mas NUNCA grave o suficiente para hospitalização, sem características psicóticas, sem prejuízo funcional marcado" },
+            { text: "Nunca houve Episódio Maníaco (distingue do TB I)" }
+          ],
+          duration: [{ text: "Os sintomas hipomaníacos ou depressivos causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }],
+          exclusions: [{ text: "Não melhor explicado por outro transtorno; não atribuível a substâncias/condição médica" }]
+        },
+        questions: [
+          { cat: "Hipomania vs. Mania", text: "Nessas fases de euforia, você foi hospitalizado? Teve algum episódio psicótico? O período durou mais de 1 semana sem interrupção?" },
+          { cat: "Reconhecimento da hipomania", text: "Alguém próximo notou mudanças no seu comportamento nesses períodos? Você mesmo notou que estava diferente do normal, mesmo se sentindo bem?" },
+          { cat: "Depressão", text: "Quantas vezes já ficou deprimido? A depressão é mais frequente que a hipomania na sua vida?" }
+        ]
+      },
+      {
+        name: "Transtorno Ciclotímico",
+        cid10: "F34.0",
+        cid11: "6A62",
+        criteria: {
+          required: [
+            { text: "Por ≥2 anos (≥1 ano em crianças/adolescentes), numerosos períodos com sintomas hipomaníacos que não preenchem critérios para episódio hipomaníaco E numerosos períodos com sintomas depressivos que não preenchem critérios para episódio depressivo maior" },
+            { text: "Durante o período de 2 anos, os períodos hipomaníacos e depressivos estiveram presentes em pelo menos metade do tempo E a pessoa não ficou sem sintomas por >2 meses consecutivos" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Nunca foram preenchidos critérios para EDM, episódio maníaco ou hipomaníaco" },
+            { text: "Não atribuível a substâncias ou condição médica" }
+          ]
+        },
+        questions: [
+          { cat: "Oscilação crônica", text: "Desde quando você oscila entre períodos de euforia leve e tristeza leve de forma contínua? Já passou mais de 2 meses sem essa oscilação?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: "Transtornos Depressivos",
+    color: "#4a8fc4",
+    disorders: [
+      {
+        name: "Transtorno Depressivo Maior",
+        cid10: "F32.9",
+        cid11: "6A70",
+        criteria: {
+          required: [
+            { text: "≥5 dos seguintes sintomas por ≥2 semanas, representando mudança do funcionamento anterior. Pelo menos 1 deve ser (1) ou (2):\n1. Humor deprimido na maior parte do dia, quase todos os dias\n2. Acentuada diminuição do interesse ou prazer em todas (ou quase) atividades\n3. Perda ou ganho de peso significativo (>5% em 1 mês) ou alteração do apetite\n4. Insônia ou hipersonia\n5. Agitação ou retardo psicomotor\n6. Fadiga ou perda de energia\n7. Sentimentos de inutilidade ou culpa excessiva/inapropriada\n8. Capacidade diminuída de pensar, concentrar-se ou tomar decisões\n9. Pensamentos recorrentes de morte, ideação suicida, tentativa de suicídio" }
+          ],
+          duration: [{ text: "Os sintomas causam sofrimento clinicamente significativo ou prejuízo no funcionamento social, profissional ou em outras áreas" }],
+          exclusions: [
+            { text: "Os sintomas não são atribuíveis a efeitos fisiológicos de substâncias ou outra condição médica" },
+            { text: "A ocorrência do EDM não é mais bem explicada por transtorno esquizoafetivo, esquizofrenia, transtorno esquizofreniforme, transtorno delirante ou outro transtorno do espectro da esquizofrenia" },
+            { text: "Nunca houve episódio maníaco ou hipomaníaco (excluir bipolar)" }
+          ]
+        },
+        questions: [
+          { cat: "Humor e anedonia", text: "Como está seu humor na maior parte do dia? Ainda consegue sentir prazer nas coisas que antes gostava de fazer?" },
+          { cat: "Sintomas neurovegetativos", text: "Como está seu sono? Apetite? Já perdeu ou ganhou peso significativo nesse período? Sente seu corpo pesado ou lento?" },
+          { cat: "Cognição", text: "Está tendo dificuldade para se concentrar, tomar decisões ou lembrar das coisas?" },
+          { cat: "Culpa e inutilidade", text: "Tem se sentido inútil, um fardo para os outros, ou culpado por coisas que não são sua responsabilidade?" },
+          { cat: "Ideação suicida", text: "Você já pensou que seria melhor estar morto, ou teve pensamentos de se machucar? (Sempre avaliar — sem exagerar ou minimizar)" },
+          { cat: "Início e gatilho", text: "Quando os sintomas começaram? Houve algum evento desencadeante? É a primeira vez?" },
+          { cat: "Excluir bipolar", text: "Você já teve algum período de euforia intensa, com pouca necessidade de sono e muita energia? (Rastrear hipomanía/mania)" }
+        ]
+      },
+      {
+        name: "Transtorno Depressivo Persistente (Distimia)",
+        cid10: "F34.1",
+        cid11: "6A71",
+        criteria: {
+          required: [
+            { text: "Humor deprimido na maior parte do dia, na maioria dos dias, por pelo menos 2 anos (pelo menos 1 ano em crianças/adolescentes)" },
+            { text: "Presença, enquanto deprimido, de ≥2 dos seguintes: apetite diminuído ou excessivo; insônia ou hipersonia; baixa energia ou fadiga; baixa autoestima; dificuldade de concentração ou tomada de decisões; sentimentos de desesperança" }
+          ],
+          duration: [
+            { text: "Durante o período de 2 anos, a pessoa nunca esteve sem os sintomas por mais de 2 meses consecutivos" },
+            { text: "Os critérios para EDM podem estar continuamente presentes por 2 anos (especificar 'dupla depressão')" }
+          ],
+          exclusions: [
+            { text: "Nunca houve episódio maníaco ou hipomaníaco" },
+            { text: "Não mais bem explicado por transtorno esquizofreniforme, etc." },
+            { text: "Não atribuível a substâncias ou condição médica" }
+          ]
+        },
+        questions: [
+          { cat: "Cronicidade", text: "Há quanto tempo se sente assim? Consegue lembrar algum período prolongado em que se sentiu bem?" },
+          { cat: "Identidade depressiva", text: "Você sente que 'sempre foi assim', que é da sua personalidade ser triste? Às vezes pacientes distímicos não identificam como doença" },
+          { cat: "Sobreposição de EDM", text: "Houve algum período em que a tristeza ficou muito mais intensa do que o habitual? (Dupla depressão)" }
+        ]
+      },
+      {
+        name: "Transtorno Disfórico Pré-Menstrual (TDPM)",
+        cid10: "N94.3",
+        cid11: "GA34.41",
+        criteria: {
+          required: [
+            { text: "Na maioria dos ciclos menstruais, ≥5 sintomas na semana final antes do início da menstruação, com melhora poucos dias após seu início e diminuição ou ausência na semana pós-menstrual. Ao menos 1 deve ser: labilidade afetiva acentuada, irritabilidade/raiva, humor deprimido, ansiedade/tensão" },
+            { text: "Outros possíveis: diminuição do interesse, dificuldade de concentração, letargia, alteração apetite, hipersonia/insônia, sensação de sobrecarga, sintomas físicos (dor mamária, inchaço, ganho de peso)" }
+          ],
+          duration: [{ text: "Sintomas associados a sofrimento clinicamente significativo ou interferência em funcionamento" }],
+          exclusions: [{ text: "Não exacerbação de outro transtorno" }]
+        },
+        questions: [
+          { cat: "Padrão cíclico", text: "Os sintomas ocorrem toda vez na semana antes da menstruação e melhoram logo após o início do sangramento? Você registrou isso no calendário?" }
+        ]
+      },
+      {
+        name: "Transtorno Depressivo por Substância/Medicamento",
+        cid10: "F19.14",
+        cid11: "6A72",
+        criteria: {
+          required: [
+            { text: "Perturbação depressiva proeminente e persistente que predomina no quadro clínico" },
+            { text: "Evidências de que o transtorno se desenvolveu durante ou logo após intoxicação/abstinência, ou após exposição a medicamento capaz de produzir os sintomas" }
+          ],
+          duration: [],
+          exclusions: [{ text: "O transtorno não ocorre exclusivamente durante delirium; não é mais bem explicado por transtorno depressivo independente" }]
+        },
+        questions: [
+          { cat: "Uso de substâncias", text: "A depressão apareceu ou piorou significativamente com o uso de álcool, cannabis, estimulantes ou outro tipo de substância?" },
+          { cat: "Medicamentos", text: "Você começou ou aumentou algum medicamento (interferon, betabloqueador, hormônios, corticoide) antes do início dos sintomas depressivos?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Transtornos de Ansiedade",
+    color: "#2ecba0",
+    disorders: [
+      {
+        name: "Transtorno de Ansiedade Generalizada (TAG)",
+        cid10: "F41.1",
+        cid11: "6B00",
+        criteria: {
+          required: [
+            { text: "Ansiedade e preocupação excessivas (expectativa apreensiva) ocorrendo na maioria dos dias por ≥6 meses, sobre vários eventos ou atividades" },
+            { text: "O indivíduo considera difícil controlar a preocupação" },
+            { text: "≥3 dos seguintes (≥1 em crianças): inquietação ou sensação de estar com os nervos à flor da pele; fatigabilidade fácil; dificuldade de concentração; irritabilidade; tensão muscular; perturbação do sono" }
+          ],
+          duration: [{ text: "Ansiedade, preocupação ou sintomas físicos causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }],
+          exclusions: [
+            { text: "A perturbação não é atribuível a substâncias ou condição médica" },
+            { text: "Não mais bem explicado por outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Preocupação excessiva", text: "Você se preocupa com muitas coisas ao mesmo tempo (trabalho, saúde, família, dinheiro)? Essa preocupação é difícil de controlar, mesmo quando você sabe que está exagerando?" },
+          { cat: "Sintomas físicos", text: "Você costuma sentir tensão muscular, dor de cabeça, fadiga, problemas para dormir relacionados à preocupação?" },
+          { cat: "Controle", text: "Quando você começa a se preocupar, consegue parar? O que acontece quando tenta se distrair?" },
+          { cat: "Duração", text: "Há quanto tempo se sente assim? É quase todos os dias ou em situações específicas?" },
+          { cat: "Triggersituacionais", text: "Existe algum tema de preocupação dominante ou você se preocupa com tudo de forma igual?" }
+        ]
+      },
+      {
+        name: "Transtorno de Pânico",
+        cid10: "F41.0",
+        cid11: "6B01",
+        criteria: {
+          required: [
+            { text: "Ataques de pânico inesperados recorrentes: surge abruptamente, atinge o pico em minutos, com ≥4 dos seguintes: palpitações/taquicardia, sudorese, tremores, dispneia, sensação de sufocamento, dor torácica, náusea/desconforto abdominal, tontura/desmaio, calafrios ou ondas de calor, parestesias, desrealização/despersonalização, medo de perder o controle/'enlouquecer', medo de morrer" },
+            { text: "Ao menos 1 ataque seguido de ≥1 mês de: (a) preocupação persistente com mais ataques ou suas consequências; OU (b) mudança mal-adaptativa significativa de comportamento relacionada aos ataques" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "A perturbação não é atribuível a substâncias ou condição médica (ex: hipertireoidismo, prolapsus mitral)" },
+            { text: "Não mais bem explicado por outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Fenomenologia do ataque", text: "Descreva como é um ataque: o que sente primeiro? Quanto tempo dura? O que está fazendo quando começa?" },
+          { cat: "Inesperabilidade", text: "Os ataques ocorrem sem nenhum gatilho aparente, mesmo quando você está relaxado ou dormindo?" },
+          { cat: "Medo antecipatório", text: "Você passa o tempo com medo de ter outro ataque? Isso mudou o que você faz ou onde vai?" },
+          { cat: "Esquiva agorafóbica", text: "Você passou a evitar lugares ou situações por medo de ter um ataque (transporte público, shoppings, multidões, ficar sozinho)?" },
+          { cat: "Avaliação médica", text: "Você foi ao pronto-socorro achando que estava tendo um infarto ou derrame? Todos os exames voltaram normais?" }
+        ]
+      },
+      {
+        name: "Agorafobia",
+        cid10: "F40.00",
+        cid11: "6B02",
+        criteria: {
+          required: [
+            { text: "Medo ou ansiedade acentuados em ≥2 das seguintes situações: uso de transporte público, estar em espaços abertos, estar em locais fechados, ficar em fila ou na multidão, estar sozinho fora de casa" },
+            { text: "O indivíduo teme ou evita essas situações pelo pensamento de que pode ser difícil escapar ou receber ajuda caso desenvolva sintomas de pânico" },
+            { text: "As situações agorafóbicas quase sempre provocam medo ou ansiedade" },
+            { text: "As situações agorafóbicas são ativamente evitadas, requerem presença de companheiro ou são suportadas com intensa ansiedade" }
+          ],
+          duration: [
+            { text: "O medo ou a ansiedade são desproporcionais ao perigo real" },
+            { text: "O medo, ansiedade ou esquiva é persistente (≥6 meses)" },
+            { text: "Causa sofrimento ou prejuízo clinicamente significativo" }
+          ],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Situações evitadas", text: "Quais lugares você passou a evitar? Consegue sair de casa sozinho? Precisa de acompanhante em atividades cotidianas?" },
+          { cat: "Comprometimento", text: "Essa esquiva prejudicou seu trabalho, vida social ou autonomia?" }
+        ]
+      },
+      {
+        name: "Fobia Social (Transtorno de Ansiedade Social)",
+        cid10: "F40.10",
+        cid11: "6B04",
+        criteria: {
+          required: [
+            { text: "Medo ou ansiedade acentuados de situações sociais onde o indivíduo está exposto a possível avaliação pelos outros (ex: interações sociais, ser observado, realizar em frente a outros)" },
+            { text: "O indivíduo teme agir de modo ou mostrar sintomas de ansiedade que sejam avaliados negativamente (humilhação, constrangimento, rejeição)" },
+            { text: "As situações sociais quase sempre provocam medo ou ansiedade" },
+            { text: "As situações sociais são evitadas ou suportadas com intensa ansiedade" },
+            { text: "O medo ou ansiedade é desproporcional à ameaça real" }
+          ],
+          duration: [
+            { text: "Persistência ≥6 meses" },
+            { text: "Causa sofrimento ou prejuízo clinicamente significativo" }
+          ],
+          exclusions: [
+            { text: "Não atribuível a substâncias ou condição médica" },
+            { text: "Não mais bem explicado por outro transtorno" }
+          ]
+        },
+        questions: [
+          { cat: "Núcleo do medo", text: "Você tem muito medo de dizer algo errado, parecer ansioso ou ser julgado negativamente pelas pessoas?" },
+          { cat: "Situações específicas", text: "Quais situações são mais difíceis: falar em público, comer na frente de outros, iniciar conversas, falar com figuras de autoridade, festas?" },
+          { cat: "Esquiva e compensação", text: "Você evita essas situações? Usa álcool para se soltar socialmente? Checa excessivamente o que vai dizer antes?" },
+          { cat: "Desempenho vs. generalizado", text: "O medo é só em situações de desempenho (apresentação) ou em qualquer interação social?" }
+        ]
+      },
+      {
+        name: "Fobia Específica",
+        cid10: "F40.2",
+        cid11: "6B03",
+        criteria: {
+          required: [
+            { text: "Medo ou ansiedade acentuados acerca de um objeto ou situação específica (voar, alturas, animais, receber injeção, ver sangue)" },
+            { text: "O objeto ou situação fóbica quase sempre provoca medo ou ansiedade imediatos" },
+            { text: "O objeto ou situação fóbica é ativamente evitado ou suportado com ansiedade intensa" },
+            { text: "O medo ou ansiedade é desproporcional ao perigo real" }
+          ],
+          duration: [
+            { text: "Persistência ≥6 meses" },
+            { text: "Causa sofrimento ou prejuízo clinicamente significativo" }
+          ],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Estímulo fóbico", text: "Qual é o objeto ou situação específica? O medo é imediato ao contato ou antecipatório?" },
+          { cat: "Impacto", text: "Você evita situações por causa do medo? Isso limita sua vida de alguma forma?" }
+        ]
+      },
+      {
+        name: "Transtorno de Ansiedade de Separação",
+        cid10: "F93.0",
+        cid11: "6B05",
+        criteria: {
+          required: [
+            { text: "Medo ou ansiedade excessivos acerca da separação de figuras de apego, com ≥3 dos seguintes: sofrimento excessivo antecipando ou durante separação; preocupação persistente com dano a figuras de apego; preocupação persistente com eventos que levem à separação; relutância/recusa em sair de casa ou ir para outros lugares; medo excessivo de ficar sozinho; recusa em dormir longe; pesadelos repetidos com separação; queixas somáticas em situações de separação" }
+          ],
+          duration: [
+            { text: "Persistência ≥4 semanas em crianças/adolescentes; ≥6 meses em adultos" },
+            { text: "Causa sofrimento ou prejuízo clinicamente significativo" }
+          ],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Figuras de apego", text: "Quem são as pessoas de quem tem medo de se separar? Quando eles saem, como você se sente?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: "Transtorno Obsessivo-Compulsivo e Transtornos Relacionados",
+    color: "#e88fad",
+    disorders: [
+      {
+        name: "Transtorno Obsessivo-Compulsivo (TOC)",
+        cid10: "F42",
+        cid11: "6B20",
+        criteria: {
+          required: [
+            { text: "Presença de obsessões, compulsões ou ambas. Obsessões: pensamentos, impulsos ou imagens recorrentes e persistentes que são experienciados como intrusivos e indesejados; o indivíduo tenta ignorar ou suprimir ou neutralizá-los com outro pensamento ou ação (compulsão). Compulsões: comportamentos repetitivos (ex: lavar mãos, organizar, verificar) ou atos mentais (ex: orar, contar) que o indivíduo se sente compelido a executar em resposta à obsessão, de acordo com regras aplicadas rigidamente; comportamentos ou atos mentais visam prevenir ou reduzir ansiedade, mas não são realisticamente conectados ou são claramente excessivos" },
+            { text: "As obsessões ou compulsões consomem tempo (ex: >1 hora/dia) ou causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "A perturbação não é atribuível a substâncias ou condição médica" },
+            { text: "Não mais bem explicado por sintomas de outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Obsessões — conteúdo", text: "Você tem pensamentos, imagens ou impulsos que entram na sua mente de forma repetida e indesejada, mesmo tentando afastá-los? Sobre contaminação, simetria, dano a outros, conteúdo sexual ou religioso?" },
+          { cat: "Compulsões — comportamentos", text: "Você realiza comportamentos repetitivos como lavar as mãos, verificar portas/gás/tomadas, organizar objetos em ordem específica, contar, repetir palavras mentalmente?" },
+          { cat: "Relação obsessão-compulsão", text: "O comportamento repetitivo é feito para reduzir a ansiedade do pensamento intrusivo? Funciona?" },
+          { cat: "Tempo e impacto", text: "Quanto tempo por dia esses pensamentos e comportamentos tomam? Isso atrasa você no trabalho, em casa?" },
+          { cat: "Ego-distônico", text: "Esses pensamentos lhe parecem estranhos, perturbadores? Ou lhe parecem completamente verdadeiros e lógicos?" },
+          { cat: "Insight", text: "Você reconhece que as obsessões e compulsões são excessivas e irracionais? (Avaliar grau de insight)" }
+        ]
+      },
+      {
+        name: "Transtorno Dismórfico Corporal (TDC)",
+        cid10: "F45.22",
+        cid11: "6B21",
+        criteria: {
+          required: [
+            { text: "Preocupação com um ou mais defeitos ou falhas percebidos na aparência física que não são observáveis ou que parecem pequenos para os outros" },
+            { text: "Em determinado momento durante o curso do transtorno, o indivíduo realizou comportamentos repetitivos (ex: verificar espelho, checar pele, buscar tranquilização) ou atos mentais (ex: comparar aparência com a de outros) em resposta às preocupações com aparência" },
+            { text: "A preocupação causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [{ text: "As preocupações com aparência não são mais bem explicadas por preocupações com gordura corporal em transtorno alimentar" }]
+        },
+        questions: [
+          { cat: "Foco da preocupação", text: "Você se preocupa muito com alguma parte específica do seu corpo (nariz, pele, cabelo, peso, músculos)? Acredita que outros percebem esse defeito?" },
+          { cat: "Comportamentos relacionados", text: "Você passa muito tempo olhando no espelho, pedindo para outros dizerem que você está bem, cobrindo essa parte, pesquisando cirurgias?" },
+          { cat: "Impacto", text: "Evita situações sociais, trabalho ou atividades por causa dessa preocupação?" }
+        ]
+      },
+      {
+        name: "Tricotilomania (Transtorno de Arrancar Cabelos)",
+        cid10: "F63.3",
+        cid11: "6B24",
+        criteria: {
+          required: [
+            { text: "Arrancar cabelo recorrente, resultando em perda de cabelo" },
+            { text: "Tentativas repetidas de diminuir ou parar de arrancar os cabelos" },
+            { text: "Causar sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Arrancar cabelo não é atribuível a condição dermatológica ou outro transtorno mental" }]
+        },
+        questions: [
+          { cat: "Comportamento", text: "De qual parte do corpo você arranca: couro cabeludo, sobrancelhas, cílios, pelos do corpo? Ocorre de forma automática ou consciente?" },
+          { cat: "Tensão-alívio", text: "Você sente tensão antes de arrancar e alívio após? Ou ocorre sem consciência?" }
+        ]
+      },
+      {
+        name: "Transtorno de Escoriação (Skin Picking)",
+        cid10: "L98.1",
+        cid11: "6B25",
+        criteria: {
+          required: [
+            { text: "Cutucar a pele recorrente resultando em lesões cutâneas" },
+            { text: "Tentativas repetidas de diminuir ou parar o comportamento" },
+            { text: "Causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não atribuível a substâncias, condição médica ou outro transtorno mental" }]
+        },
+        questions: [
+          { cat: "Comportamento", text: "Você belisca, espreme ou escoria a pele de forma repetitiva? Acontece de forma automática (ex: assistindo TV) ou é intencional?" }
+        ]
+      },
+      {
+        name: "Transtorno de Acumulação",
+        cid10: "F42.3",
+        cid11: "6B22",
+        criteria: {
+          required: [
+            { text: "Dificuldade persistente em descartar ou desfazer-se de pertences, independentemente de seu valor real" },
+            { text: "Essa dificuldade é devida a necessidade percebida de guardar os itens e ao sofrimento associado ao descartá-los" },
+            { text: "A dificuldade em descartar resulta no acúmulo de pertences que congestionam e desorganizam as áreas de estar, comprometendo o uso previsto" },
+            { text: "A acumulação causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "A acumulação não é atribuível a condição médica" },
+            { text: "Não mais bem explicada por sintomas de outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Acumulação", text: "Você tem grande dificuldade em jogar coisas fora, mesmo que não precise mais? Como está o estado da sua casa?" },
+          { cat: "Sofrimento ao descartar", text: "Quando alguém sugere que você se livre de objetos, como você reage? Sente ansiedade ou tristeza ao pensar em jogar algo fora?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: "Transtornos Relacionados a Trauma e a Estressores",
+    color: "#d4876b",
+    disorders: [
+      {
+        name: "Transtorno de Estresse Pós-Traumático (TEPT)",
+        cid10: "F43.1",
+        cid11: "6B40",
+        criteria: {
+          required: [
+            { text: "Exposição a morte, ameaça de morte, lesão grave ou violência sexual de forma direta, como testemunha, ao ser informado que aconteceu a familiar/amigo próximo, ou por exposição repetida/extrema a detalhes aversivos do evento" },
+            { text: "INTRUSÃO (≥1): memórias intrusivas angustiantes e involuntárias; pesadelos recorrentes; flashbacks dissociativos; sofrimento psicológico ou reações fisiológicas intensas a pistas que lembram o trauma" },
+            { text: "ESQUIVA (≥1): esquiva de memórias, pensamentos ou sentimentos angustiantes; esquiva de lembretes externos (pessoas, lugares, atividades, situações)" },
+            { text: "ALTERAÇÕES COGNITIVAS E DO HUMOR (≥2): incapacidade de lembrar aspectos do trauma; crenças negativas persistentes sobre si ou o mundo; culpa ou autoblame distorcidos; emoções negativas persistentes; diminuição do interesse; sentir-se alheio dos outros; incapacidade de sentir emoções positivas" },
+            { text: "ALTERAÇÕES DE EXCITABILIDADE (≥2): irritabilidade/explosões de raiva; comportamento imprudente ou autodestrutivo; hipervigilância; resposta de sobressalto exagerada; problemas de concentração; distúrbio do sono" }
+          ],
+          duration: [
+            { text: "Duração das perturbações >1 mês" },
+            { text: "Causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          exclusions: [{ text: "Não atribuível a substâncias ou condição médica" }]
+        },
+        questions: [
+          { cat: "Evento traumático", text: "Você passou por alguma situação em que sentiu sua vida ou a de outro em perigo: acidente, violência, abuso, guerra, desastre?" },
+          { cat: "Reexperiência", text: "Esse evento volta à sua mente de forma intrusiva, como se estivesse acontecendo de novo? Tem pesadelos relacionados?" },
+          { cat: "Esquiva", text: "Você evita pensar nisso, falar sobre o evento, ou situações que lembram o que aconteceu?" },
+          { cat: "Hiperativação", text: "Você está sempre alerta, como se algo ruim fosse acontecer? Assusta-se facilmente? Tem dificuldade para dormir ou se concentrar?" },
+          { cat: "Alteração de humor", text: "Desde o evento, você se sente diferente de si mesmo, mais desconectado, com dificuldade de sentir alegria ou amor?" },
+          { cat: "Culpa", text: "Você se sente responsável pelo que aconteceu? Acredita que poderia ter evitado?" }
+        ]
+      },
+      {
+        name: "Transtorno de Estresse Agudo",
+        cid10: "F43.0",
+        cid11: "6B41",
+        criteria: {
+          required: [
+            { text: "Exposição a evento traumático (mesmos critérios do TEPT)" },
+            { text: "≥9 dos seguintes sintomas (de qualquer das 5 categorias — intrusão, humor negativo, dissociação, esquiva, excitabilidade)" }
+          ],
+          duration: [
+            { text: "Duração de 3 dias a 1 mês após exposição ao trauma (distingue do TEPT)" },
+            { text: "Causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Tempo", text: "Quando ocorreu o evento traumático? Os sintomas têm menos de 1 mês? (Fundamental para distinção de TEPT)" },
+          { cat: "Dissociação aguda", text: "Logo após o trauma, sentiu como se estivesse 'fora do corpo', que a realidade parecia irreal ou que estava num sonho?" }
+        ]
+      },
+      {
+        name: "Transtorno de Ajustamento",
+        cid10: "F43.2",
+        cid11: "6B43",
+        criteria: {
+          required: [
+            { text: "Desenvolvimento de sintomas emocionais ou comportamentais em resposta a um estressor identificável, ocorrendo dentro de 3 meses após o início do estressor" },
+            { text: "Os sintomas ou comportamentos são clinicamente significativos: sofrimento acentuado desproporcional à gravidade/intensidade do estressor; ou prejuízo significativo no funcionamento" }
+          ],
+          duration: [
+            { text: "Não persiste por mais de 6 meses após a cessação do estressor ou suas consequências" }
+          ],
+          exclusions: [
+            { text: "Não pode ser melhor explicado por outro transtorno mental" },
+            { text: "Não representa luto normal" }
+          ]
+        },
+        questions: [
+          { cat: "Estressor identificável", text: "Houve um evento de vida específico (separação, demissão, diagnóstico médico, mudança) antes do início dos sintomas?" },
+          { cat: "Proporcionalidade", text: "Você mesmo sente que a reação é desproporcional ao que aconteceu, ou que a maioria das pessoas conseguiria lidar melhor?" },
+          { cat: "Resolução", text: "Quando o estressor passou, os sintomas diminuíram? (Distingue de transtornos do humor independentes)" }
+        ]
+      },
+      {
+        name: "Transtorno Reativo de Apego",
+        cid10: "F94.1",
+        cid11: "6B44",
+        criteria: {
+          required: [
+            { text: "Padrão consistente de comportamento inibido e emocionalmente retraído em relação a cuidadores adultos: criança raramente busca conforto e raramente responde a conforto quando angustiada" },
+            { text: "Perturbação social e emocional persistente com ≥2 dos seguintes: reatividade social e emocional mínima; afeto positivo limitado; episódios de irritabilidade, tristeza ou medo inexplicáveis" }
+          ],
+          duration: [{ text: "Padrão estabelecido antes dos 5 anos; criança com pelo menos 9 meses de idade" }],
+          exclusions: [{ text: "Critérios não preenchidos para TEA" }]
+        },
+        questions: [
+          { cat: "História de cuidados", text: "A criança passou por negligência, abuso, múltiplas trocas de cuidadores ou institucionalização precoce?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: "Transtornos Dissociativos",
+    color: "#8ecfc4",
+    disorders: [
+      {
+        name: "Transtorno Dissociativo de Identidade (TDI)",
+        cid10: "F44.81",
+        cid11: "6B64",
+        criteria: {
+          required: [
+            { text: "Perturbação da identidade caracterizada por dois ou mais estados de personalidade distintos (em algumas culturas descrita como experiência de possessão), envolvendo descontinuidade acentuada do senso de si mesmo e da capacidade de agência, com variações no afeto, comportamento, consciência, memória, percepção, cognição e/ou funcionamento sensório-motor" },
+            { text: "Lacunas recorrentes na memória de eventos cotidianos, informações pessoais importantes e/ou eventos traumáticos" },
+            { text: "Os sintomas causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "A perturbação não é parte normal de prática cultural ou religiosa amplamente aceita" },
+            { text: "Não atribuível a efeitos de substâncias ou condição médica" }
+          ]
+        },
+        questions: [
+          { cat: "Amnésia", text: "Você às vezes 'perde' períodos de tempo, encontra objetos que não lembra ter comprado, ou recebe relatos de comportamentos que não lembra ter tido?" },
+          { cat: "Identidade alterada", text: "Sente que há 'partes' diferentes dentro de você com sentimentos, vozes ou perspectivas distintas? Pessoas ao redor já trataram você como se você fosse outra pessoa?" },
+          { cat: "Trauma", text: "Você tem história de trauma grave na infância, abuso físico, sexual ou emocional severo e prolongado?" }
+        ]
+      },
+      {
+        name: "Amnésia Dissociativa",
+        cid10: "F44.0",
+        cid11: "6B61",
+        criteria: {
+          required: [
+            { text: "Incapacidade de recordar informações autobiográficas importantes, geralmente de natureza traumática ou estressante, inconsistente com o esquecimento comum" },
+            { text: "Os sintomas causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não atribuível a substâncias, condição médica neurológica ou outro transtorno dissociativo" }]
+        },
+        questions: [
+          { cat: "Extensão", text: "A perda de memória é para um evento específico ou para um período de vida inteiro? Amnésia localizada (evento) vs. generalizada (identidade/vida inteira)?" }
+        ]
+      },
+      {
+        name: "Transtorno de Despersonalização/Desrealização",
+        cid10: "F48.1",
+        cid11: "6B66",
+        criteria: {
+          required: [
+            { text: "Presença de experiências persistentes ou recorrentes de despersonalização (sentir-se separado dos próprios processos mentais ou corpo, como se fosse um observador externo; sensação de ser autômato, estar num sonho, sentir corpo não pertencer a si) e/ou desrealização (experiências de irrealidade ou estranhamento em relação ao ambiente)" },
+            { text: "Durante as experiências de despersonalização ou desrealização, o teste de realidade permanece intacto" },
+            { text: "Os sintomas causam sofrimento clinicamente significativo ou prejuízo no funcionamento" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Não exclusivamente durante psicose, pânico, depressão maior, TEPT, TEA" },
+            { text: "Não atribuível a substâncias ou condição médica" }
+          ]
+        },
+        questions: [
+          { cat: "Despersonalização", text: "Você já sentiu como se estivesse 'fora do seu corpo' observando a si mesmo de fora? Como se fosse um robô ou autômato executando ações sem sentir que é você?" },
+          { cat: "Desrealização", text: "O ambiente ao redor às vezes parece irreal, como um cenário de filme, neblina ou sonho? As pessoas parecem robôs ou não reais?" },
+          { cat: "Teste de realidade", text: "Mesmo durante esses episódios, você sabe que é uma percepção alterada e que a realidade é outra?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    title: "Transtorno de Sintomas Somáticos e Transtornos Relacionados",
+    color: "#c4a862",
+    disorders: [
+      {
+        name: "Transtorno de Sintomas Somáticos",
+        cid10: "F45.1",
+        cid11: "6C20",
+        criteria: {
+          required: [
+            { text: "Um ou mais sintomas somáticos angustiantes ou que resultam em perturbação significativa da vida diária" },
+            { text: "Pensamentos, sentimentos ou comportamentos excessivos relacionados aos sintomas somáticos ou associados a preocupações com saúde com ≥1 dos seguintes: pensamentos desproporcionais e persistentes acerca da gravidade dos sintomas; nível persistentemente elevado de ansiedade acerca da saúde ou dos sintomas; tempo e energia excessivos dedicados a esses sintomas ou preocupações com saúde" }
+          ],
+          duration: [{ text: "Pelo menos 1 sintoma somático está persistentemente presente (≥6 meses), embora o sintoma específico possa variar" }],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Foco somático", text: "Você se preocupa muito com sintomas físicos mesmo quando os médicos dizem que está tudo bem? A preocupação com a saúde ocupa muito do seu tempo?" },
+          { cat: "Comportamentos relacionados à saúde", text: "Você busca muito atendimento médico, pesquisa excessivamente sobre doenças, ou evita atividades com medo de piorar um sintoma?" }
+        ]
+      },
+      {
+        name: "Transtorno de Ansiedade de Doença (Hipocondria)",
+        cid10: "F45.21",
+        cid11: "6C21",
+        criteria: {
+          required: [
+            { text: "Preocupação de ter ou adquirir uma doença grave" },
+            { text: "Sintomas somáticos estão ausentes ou, se presentes, são apenas de intensidade leve" },
+            { text: "Há um nível elevado de ansiedade acerca da saúde e o indivíduo se alarma facilmente com questões médicas" },
+            { text: "O indivíduo realiza comportamentos excessivos relacionados à saúde (repetidas consultas, exames) OU demonstra evitação mal-adaptativa (evita clínicas, médicos)" }
+          ],
+          duration: [{ text: "A preocupação com a doença está presente por ≥6 meses" }],
+          exclusions: [{ text: "Não mais bem explicado por TSS, TAG, TP, TDC ou transtorno delirante" }]
+        },
+        questions: [
+          { cat: "Conteúdo da preocupação", text: "Qual doença você teme ter? Já foi avaliado por médicos e voltou sem diagnóstico, mas mesmo assim a preocupação persiste?" },
+          { cat: "Comportamento reassurance-seeking", text: "Você busca tranquilização de médicos repetidamente mas o alívio dura pouco? Ou ao contrário, evita ir ao médico com medo de confirmar a doença?" }
+        ]
+      },
+      {
+        name: "Transtorno Conversivo (Transtorno de Sintoma Neurológico Funcional)",
+        cid10: "F44.4-9",
+        cid11: "6C20.0",
+        criteria: {
+          required: [
+            { text: "Um ou mais sintomas de função motora voluntária ou sensorial alterada" },
+            { text: "Achados clínicos fornecem evidência de incompatibilidade entre o sintoma e condições neurológicas ou clínicas reconhecidas" },
+            { text: "O sintoma ou déficit não é mais bem explicado por outro transtorno médico ou mental" }
+          ],
+          duration: [{ text: "O sintoma causa sofrimento clinicamente significativo ou prejuízo no funcionamento" }],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Semiologia", text: "Quais são os sintomas: fraqueza, paralisia, movimentos anormais, alteração sensorial, crises não epilépticas, alteração visual, fala?" },
+          { cat: "Contexto psicossocial", text: "Os sintomas começaram ou pioram em momentos de estresse? Há ganho secundário aparente?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    title: "Transtornos Alimentares e da Ingestão de Alimentos",
+    color: "#e87a7a",
+    disorders: [
+      {
+        name: "Anorexia Nervosa",
+        cid10: "F50.0",
+        cid11: "6B80",
+        criteria: {
+          required: [
+            { text: "Restrição da ingestão de energia levando a um peso corporal significativamente baixo para idade, sexo, trajetória de desenvolvimento e saúde física" },
+            { text: "Medo intenso de ganhar peso ou engordar, ou comportamento persistente que interfere no ganho de peso, mesmo estando com peso significativamente baixo" },
+            { text: "Perturbação na maneira como o próprio peso ou forma corporal é vivenciado; influência indevida do peso ou forma corporal na autoavaliação; ou falta persistente de reconhecimento da seriedade do baixo peso corporal atual" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Peso e ingestão", text: "Quanto você pesa atualmente? Qual foi o menor peso que você teve? Quanto tempo ficou nesse peso? O que você come em um dia típico?" },
+          { cat: "Medo de engordar", text: "Você sente muito medo de engordar? Isso muda se você for tranquilizado de que não vai engordar?" },
+          { cat: "Imagem corporal", text: "Quando você se olha no espelho, como vê seu corpo? Há partes que parecem maiores do que realmente são?" },
+          { cat: "Complicações médicas", text: "Você apresenta: amenorreia, tontura, desmaios, fraqueza, frio constante, lanugo, queda de cabelo? (Avaliar gravidade clínica)" }
+        ]
+      },
+      {
+        name: "Bulimia Nervosa",
+        cid10: "F50.2",
+        cid11: "6B81",
+        criteria: {
+          required: [
+            { text: "Episódios recorrentes de compulsão alimentar: ingestão, em período discreto, de quantidade de alimento definitivamente maior do que a maioria das pessoas ingeriria; sensação de falta de controle sobre o que se come durante o episódio" },
+            { text: "Comportamentos compensatórios inapropriados recorrentes para evitar ganho de peso: vômito autoinduzido; uso indevido de laxantes, diuréticos ou outros fármacos; jejum; exercício excessivo" },
+            { text: "A compulsão alimentar e os comportamentos compensatórios inadequados ocorrem em média ≥1x/semana por ≥3 meses" },
+            { text: "A autoavaliação é indevidamente influenciada pela forma e pelo peso corporal" }
+          ],
+          duration: [],
+          exclusions: [{ text: "A perturbação não ocorre exclusivamente durante episódios de anorexia nervosa" }]
+        },
+        questions: [
+          { cat: "Ciclo binge-purge", text: "Você tem episódios em que come uma grande quantidade de alimento em curto tempo, sentindo perda de controle? O que faz depois: provoca vômito, usa laxante, jejua, exercita excessivamente?" },
+          { cat: "Frequência e padrão", text: "Com que frequência isso acontece? Em que situações costuma ocorrer (estresse, isolamento, sentimentos específicos)?" },
+          { cat: "Culpa e vergonha", text: "Como você se sente durante e após os episódios? Esconde esse comportamento?" }
+        ]
+      },
+      {
+        name: "Transtorno de Compulsão Alimentar (TCAP)",
+        cid10: "F50.81",
+        cid11: "6B82",
+        criteria: {
+          required: [
+            { text: "Episódios recorrentes de compulsão alimentar, com ≥3 dos seguintes: comer muito mais rápido que o normal; comer até se sentir desconfortavelmente cheio; comer grandes quantidades sem estar fisicamente com fome; comer sozinho devido a constrangimento; sentir-se enojado de si mesmo, deprimido ou muito culpado após" },
+            { text: "Angústia acentuada em relação à compulsão alimentar" },
+            { text: "Ocorre ≥1x/semana por ≥3 meses" }
+          ],
+          duration: [],
+          exclusions: [{ text: "A compulsão alimentar não é acompanhada de uso recorrente de comportamentos compensatórios inapropriados (distinção da bulimia)" }]
+        },
+        questions: [
+          { cat: "Compulsão sem purgação", text: "Você tem episódios de comer muito sem controle, mas sem vomitar ou usar laxantes depois?" },
+          { cat: "Sofrimento emocional", text: "Como você se sente durante e após os episódios? A culpa e vergonha são intensas?" }
+        ]
+      },
+      {
+        name: "Transtorno de Ruminação",
+        cid10: "F98.21",
+        cid11: "6B83",
+        criteria: {
+          required: [
+            { text: "Regurgitação repetida de alimento por ≥1 mês; o alimento regurgitado pode ser remastigado, deglutido novamente ou cuspido" },
+            { text: "A regurgitação repetitiva não se deve a condição gastrointestinal associada ou outra condição médica" },
+            { text: "Não ocorre exclusivamente durante anorexia, bulimia, TCAP ou ARFID" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Fenomenologia", text: "Você regurgita alimentos após as refeições sem náusea ou esforço? O alimento tem gosto normal ou azedo?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 10,
+    title: "Transtornos do Sono-Vigília",
+    color: "#7ab8e8",
+    disorders: [
+      {
+        name: "Transtorno de Insônia",
+        cid10: "F51.01",
+        cid11: "7A00",
+        criteria: {
+          required: [
+            { text: "Queixa predominante de insatisfação com a qualidade ou quantidade do sono com ≥1 dos seguintes: dificuldade em iniciar o sono; dificuldade em manter o sono (despertar frequente ou dificuldade em retornar após despertar); despertar precoce pela manhã com incapacidade de retornar ao sono" },
+            { text: "A perturbação do sono causa sofrimento clinicamente significativo ou prejuízo no funcionamento" },
+            { text: "A dificuldade de sono ocorre ≥3 noites por semana" }
+          ],
+          duration: [
+            { text: "A dificuldade do sono está presente por ≥3 meses" },
+            { text: "A dificuldade do sono ocorre apesar das oportunidades adequadas para dormir" }
+          ],
+          exclusions: [
+            { text: "A insônia não ocorre exclusivamente durante outro transtorno do sono" },
+            { text: "Não atribuível a substâncias" },
+            { text: "Coexistir transtornos mentais não explica adequadamente a queixa predominante de insônia" }
+          ]
+        },
+        questions: [
+          { cat: "Fenomenologia", text: "Você demora para pegar no sono, acorda no meio da noite, ou acorda muito cedo sem conseguir dormir mais? O sono é restaurador?" },
+          { cat: "Higiene do sono", text: "Quais são seus horários de dormir e acordar? Você usa o celular/TV na cama? Toma cafeína à tarde/noite?" },
+          { cat: "Impacto diurno", text: "A falta de sono afeta seu funcionamento durante o dia: concentração, humor, energia, erros no trabalho?" },
+          { cat: "Preocupação com o sono", text: "Você fica ansioso sobre o fato de não conseguir dormir quando está na cama? Isso piora o problema?" }
+        ]
+      },
+      {
+        name: "Transtorno de Hipersonolência",
+        cid10: "F51.11",
+        cid11: "7A01",
+        criteria: {
+          required: [
+            { text: "Sonolência excessiva apesar de dormir ≥7 horas, com ≥1 dos seguintes: períodos de sono ou cochilos recorrentes no mesmo dia; sono prolongado (>9 horas) sem restauração; dificuldade em estar totalmente acordado após despertar abrupto" },
+            { text: "A hipersonolência ocorre ≥3 dias/semana por ≥3 meses" },
+            { text: "A hipersonolência é acompanhada de sofrimento significativo ou comprometimento cognitivo, social, ocupacional ou em outra área" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Não é mais bem explicada por outro transtorno do sono; não atribuível a substâncias; coexistência com outro transtorno mental não explica adequadamente" }
+          ]
+        },
+        questions: [
+          { cat: "Sonolência diurna", text: "Você cochila involuntariamente durante o dia, mesmo tendo dormido suficientemente à noite? Em quais situações?" },
+          { cat: "Cataplexia", text: "Ao rir ou sentir emoção forte, você já sentiu seus músculos enfraquecerem ou cair? (Rastrear narcolepsia)" },
+          { cat: "Paralisia do sono/alucinações hipnagógicas", text: "Já teve sensação de não conseguir se mover ao adormecer/acordar? Já viu imagens ao adormecer ou acordar?" }
+        ]
+      },
+      {
+        name: "Narcolepsia",
+        cid10: "G47.4",
+        cid11: "7A20",
+        criteria: {
+          required: [
+            { text: "Períodos recorrentes de necessidade irresistível de dormir, dormência ou sono, ocorrendo no mesmo dia, por ≥3 meses" },
+            { text: "Presença de pelo menos 1 dos seguintes: (a) episódios de cataplexia ≥ algumas vezes/mês; (b) deficiência de hipocretina-1 no LCR; (c) LMSR mostrando latência média do sono ≤8 min e ≥2 SOREMP" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Cataplexia", text: "Quando sente emoções fortes (riso, surpresa, raiva), seus joelhos dobram, queixo cai, visão embaralhada ou cai ao chão?" },
+          { cat: "Tétrade narcoléptica", text: "Sonolência diurna excessiva + cataplexia + paralisia do sono + alucinações hipnagógicas — quantos dos 4 você tem?" }
+        ]
+      },
+      {
+        name: "Apneia Obstrutiva do Sono",
+        cid10: "G47.33",
+        cid11: "7A41",
+        criteria: {
+          required: [
+            { text: "Evidência polissonográfica de pelo menos 5 apneias ou hipopneias obstrutivas por hora de sono E sintomas: distúrbio do sono noturno; sonolência, fadiga ou sono não restaurador; acordar com apneia, engasgo ou asfixia; ronco alto, pausas respiratórias observadas pelo parceiro; hipertensão arterial, problemas de humor, cognitivos, coronarianos, acidente vascular cerebral; obesidade" },
+            { text: "OU evidência polissonográfica de ≥15 apneias/hipopneias obstrutivas por hora de sono (independentemente de sintomas associados)" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Sintomas noturnos", text: "Seu parceiro observou você roncar alto ou parar de respirar durante o sono? Você acorda engasgado ou com falta de ar?" },
+          { cat: "Sonolência diurna", text: "Você cochila involuntariamente durante o dia, até mesmo dirigindo? Acorda com dor de cabeça?" },
+          { cat: "Fatores de risco", text: "Qual seu IMC? Tem hipertensão? Pescoço largo? Alguma vez avaliou fazer polissonografia?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 11,
+    title: "Transtornos Disruptivos, do Controle de Impulsos e da Conduta",
+    color: "#d4a0c8",
+    disorders: [
+      {
+        name: "Transtorno Opositivo-Desafiador (TOD)",
+        cid10: "F91.3",
+        cid11: "6C90",
+        criteria: {
+          required: [
+            { text: "Padrão de humor irritável/raivoso, comportamento argumentativo/desafiador, ou índole vingativa com duração ≥6 meses evidenciado por ≥4 dos seguintes sintomas: frequentemente perde a cabeça; é frequentemente suscetível ou irritado pelos outros; frequentemente com raiva e ressentimento; frequentemente argumenta com figuras de autoridade; frequentemente desafia ativamente regras; frequentemente incomoda os outros deliberadamente; frequentemente culpa os outros; foi vingativo ≥2x nos últimos 6 meses" }
+          ],
+          duration: [
+            { text: "O comportamento ocorre com pelo menos 1 indivíduo que não seja irmão" },
+            { text: "Está associado a sofrimento do indivíduo ou a outros em seu contexto social imediato ou impacta negativamente no funcionamento social, educacional ou profissional" }
+          ],
+          exclusions: [{ text: "Não ocorre exclusivamente durante psicose, TUS, TDM ou TB" }]
+        },
+        questions: [
+          { cat: "Oposição", text: "A criança/adolescente questiona e desafia frequentemente adultos? Recusa seguir regras como padrão, não como exceção?" },
+          { cat: "Irritabilidade vs. oposição", text: "O componente dominante é humor irritável/raivoso (mais relacionado a problemas emocionais) ou comportamento desafiador (mais relacionado a conduta)?" }
+        ]
+      },
+      {
+        name: "Transtorno da Conduta",
+        cid10: "F91.9",
+        cid11: "6C91",
+        criteria: {
+          required: [
+            { text: "Padrão repetitivo e persistente de comportamento violando direitos básicos dos outros ou normas sociais importantes para a faixa etária, com ≥3 dos seguintes 15 critérios nos últimos 12 meses (≥1 nos últimos 6 meses): agressividade a pessoas e animais (6 critérios), destruição de propriedade (2), desonestidade ou furto (3), violações sérias de regras (4)" }
+          ],
+          duration: [{ text: "O comportamento causa prejuízo clinicamente significativo no funcionamento" }],
+          exclusions: [{ text: "Se ≥18 anos, critérios não são mais bem preenchidos por transtorno da personalidade antissocial" }]
+        },
+        questions: [
+          { cat: "Agressividade", text: "O jovem se envolve em brigas frequentes iniciadas por ele, usa armas, foi cruel com animais ou pessoas?" },
+          { cat: "Regras e autoridade", text: "Fica fora de casa à noite antes dos 13 anos, fuge de casa, faltava muito à escola?" },
+          { cat: "Empatia e remorso", text: "Demonstra remorso quando prejudica alguém? (Avaliar traços de callousness-unemotional)" }
+        ]
+      },
+      {
+        name: "Transtorno Explosivo Intermitente",
+        cid10: "F63.81",
+        cid11: "6C73",
+        criteria: {
+          required: [
+            { text: "Explosões recorrentes de comportamento representando incapacidade de controlar impulsos agressivos, manifestadas como: agressão verbal (acessos de raiva, discussões, insultos) ou agressão física que não resulta em dano físico ou destruição de propriedade — ocorrendo ≥2x/semana em média por 3 meses; OU 3 episódios envolvendo danos físicos ou destruição de propriedade em 12 meses" },
+            { text: "A magnitude da agressividade é grosseiramente desproporcional ao estressor psicossocial" },
+            { text: "Explosões agressivas recorrentes não são premeditadas" }
+          ],
+          duration: [{ text: "Idade mínima de 6 anos; causa sofrimento ou prejuízo funcional" }],
+          exclusions: [
+            { text: "Não mais bem explicado por outro transtorno mental" },
+            { text: "Não atribuível a condição médica ou substâncias" }
+          ]
+        },
+        questions: [
+          { cat: "Explosões", text: "Você tem explosões de raiva desproporcional que causam constrangimento ou arrependimento logo em seguida?" },
+          { cat: "Controle de impulso", text: "Sente que não consegue controlar as explosões antes de acontecerem? O que acontece imediatamente antes?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Antissocial",
+        cid10: "F60.2",
+        cid11: "6D10.2",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de desrespeito e violação dos direitos dos outros desde os 15 anos, indicado por ≥3 dos seguintes: não se conformar com normas sociais; falsidade, uso de pseudônimos; impulsividade; irritabilidade e agressividade; descaso pela segurança própria e alheia; irresponsabilidade consistente; ausência de remorso" }
+          ],
+          duration: [
+            { text: "Pelo menos 18 anos de idade" },
+            { text: "Evidências de transtorno da conduta com início antes dos 15 anos" },
+            { text: "O comportamento antissocial não ocorre exclusivamente durante esquizofrenia ou TB" }
+          ],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Empatia", text: "Você se importa com os sentimentos dos outros? Sente remorso quando prejudica alguém?" },
+          { cat: "Infância", text: "Houve diagnóstico ou comportamentos de transtorno da conduta antes dos 15 anos?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 12,
+    title: "Transtornos Relacionados a Substâncias e Transtornos Aditivos",
+    color: "#91d47c",
+    disorders: [
+      {
+        name: "Transtorno por Uso de Álcool",
+        cid10: "F10.20",
+        cid11: "6C40",
+        criteria: {
+          required: [
+            { text: "Padrão problemático de uso de álcool levando a comprometimento ou sofrimento clinicamente significativos, manifestado por ≥2 dos seguintes em 12 meses:\n1. Álcool consumido em quantidades maiores ou por períodos mais longos que o pretendido\n2. Desejo persistente ou esforços malsucedidos de reduzir o uso\n3. Muito tempo gasto em obter, usar ou se recuperar do álcool\n4. Fissura (craving)\n5. Uso recorrente resultando em incapacidade de cumprir obrigações\n6. Uso contínuo apesar de problemas sociais/interpessoais persistentes\n7. Atividades sociais, ocupacionais ou recreativas abandonadas ou reduzidas\n8. Uso recorrente em situações fisicamente perigosas\n9. Uso contínuo apesar do conhecimento de problema físico ou psicológico persistente\n10. Tolerância\n11. Abstinência" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "CAGE", text: "Já sentiu que deveria Cortar o uso? Pessoas o Aborrece com críticas? Já se sentiu Culpado? Já usou logo cedo de manhã para se Estabilizar? (≥2 positivos = rastreio positivo)" },
+          { cat: "Controle", text: "Quando começa a beber, consegue parar como planejado? Já tentou parar e não conseguiu?" },
+          { cat: "Abstinência", text: "Quando fica sem beber, você sente tremores, sudorese, ansiedade, convulsões, ou alucinações? (Avaliar síndrome de abstinência)" },
+          { cat: "Impacto", text: "O álcool já causou problemas no trabalho, família, saúde ou problemas legais?" },
+          { cat: "Fissura", text: "Você tem vontade intensa de beber (craving) em certas situações? O que desencadeia?" }
+        ]
+      },
+      {
+        name: "Transtorno por Uso de Cannabis",
+        cid10: "F12.20",
+        cid11: "6C41",
+        criteria: {
+          required: [
+            { text: "Mesmos 11 critérios do TUA, aplicados ao uso de cannabis" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Padrão de uso", text: "Com que frequência usa? Quanto? Usa sozinho? Usa para dormir, para ansiedade, como automedicação?" },
+          { cat: "Abstinência de cannabis", text: "Quando para de usar, sente irritabilidade, insônia, perda de apetite, ansiedade? (Síndrome de abstinência de cannabis)" },
+          { cat: "Psicose induzida", text: "Já teve episódios de paranoia, alucinações ou desorganização associados ao uso? (Rastrear psicose induzida por cannabis)" }
+        ]
+      },
+      {
+        name: "Transtorno por Uso de Estimulantes (Cocaína/Anfetaminas)",
+        cid10: "F14.20 / F15.20",
+        cid11: "6C44 / 6C45",
+        criteria: {
+          required: [
+            { text: "Mesmos 11 critérios do TUA, aplicados ao uso de estimulantes (cocaína, anfetamina, metanfetamina, crack)" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Padrão de uso", text: "Qual substância: cocaína, crack, rebite? Via de administração? Frequência e quantidade? Já usou em binge por vários dias?" },
+          { cat: "Fissura e controle", text: "O craving é intenso? Continua usando apesar de sérias consequências?" },
+          { cat: "Complicações", text: "Já teve episódios psicóticos durante o uso (paranoia, alucinações)? Problemas cardiovasculares?" }
+        ]
+      },
+      {
+        name: "Transtorno por Uso de Opioides",
+        cid10: "F11.20",
+        cid11: "6C43",
+        criteria: {
+          required: [
+            { text: "Mesmos 11 critérios do TUA, aplicados ao uso de opioides (heroína, morfina, codeína, tramadol, oxicodona)" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Substância e via", text: "Qual opioide? Via: oral, injetável, inalado? Começou com prescrição médica (opioides para dor) ou uso recreativo?" },
+          { cat: "Abstinência", text: "Quando fica sem a substância, apresenta: náusea, vômito, diarreia, dores musculares, insônia, piloereção, rinorreia? (Síndrome de abstinência de opioides)" },
+          { cat: "Overdose", text: "Já teve episódios de overdose? Já usou naloxona?" }
+        ]
+      },
+      {
+        name: "Jogo Patológico (Transtorno do Jogo)",
+        cid10: "F63.0",
+        cid11: "6C50",
+        criteria: {
+          required: [
+            { text: "Comportamento persistente e recorrente de jogo problemático levando a comprometimento ou sofrimento clinicamente significativo, com ≥4 dos seguintes em 12 meses: necessidade de jogar com quantias crescentes; inquieto ou irritável quando tenta parar; esforços repetidos malsucedidos de controlar, reduzir ou parar; preocupado com jogo; joga quando angustiado; após perder, volta para tentar recuperar; mente para esconder o jogo; colocou em risco relacionamento/emprego; depende de outros para dinheiro" }
+          ],
+          duration: [{ text: "O comportamento de jogo não é mais bem explicado por episódio maníaco" }],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Padrão", text: "Você joga com frequência crescente, apostando valores maiores para sentir a mesma excitação? Fica irritado quando tenta parar?" },
+          { cat: "Consequências", text: "O jogo já causou dívidas importantes, prejudicou relacionamentos, emprego ou criou segredos com família?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 13,
+    title: "Transtornos Neurocognitivos",
+    color: "#6bc9e0",
+    disorders: [
+      {
+        name: "Transtorno Neurocognitivo Maior (Demência)",
+        cid10: "F03.90",
+        cid11: "6D80",
+        criteria: {
+          required: [
+            { text: "Declínio cognitivo significativo em ≥1 domínio cognitivo (atenção complexa, função executiva, aprendizagem e memória, linguagem, habilidade perceptual-motora, cognição social)" },
+            { text: "Baseado em: preocupação do próprio, de familiar ou clínico; e declínio substancial no desempenho neuropsicológico" },
+            { text: "Os déficits cognitivos interferem na independência nas atividades cotidianas" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Os déficits cognitivos não ocorrem exclusivamente no contexto de delirium" },
+            { text: "Não são mais bem explicados por outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Memória", text: "O paciente/familiar repete as mesmas histórias ou perguntas? Esquece compromissos, nomes de pessoas próximas, onde colocou objetos?" },
+          { cat: "Atividades de vida diária", text: "Ainda consegue pagar contas, cozinhar, usar transporte, tomar medicamentos sem supervisão?" },
+          { cat: "Início e progressão", text: "O início foi súbito ou gradual? Piora em degraus ou progressiva e constante? Há flutuação? (Diferencia etiologia)" },
+          { cat: "Outros domínios", text: "Houve mudanças de personalidade, comportamento, linguagem, orientação espacial, alucinações?" },
+          { cat: "Fatores vasculares", text: "Há histórico de AVC, hipertensão, diabetes, fibrilação atrial? (Demência vascular)" }
+        ]
+      },
+      {
+        name: "Transtorno Neurocognitivo Leve (CCL)",
+        cid10: "G31.84",
+        cid11: "6D71",
+        criteria: {
+          required: [
+            { text: "Declínio cognitivo moderado em ≥1 domínio cognitivo" },
+            { text: "Os déficits cognitivos NÃO interferem na capacidade de independência nas atividades cotidianas (pode requerer maior esforço, estratégias compensatórias ou adaptações)" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "Não ocorre exclusivamente em delirium" },
+            { text: "Não mais bem explicado por outro transtorno mental" }
+          ]
+        },
+        questions: [
+          { cat: "Autonomia preservada", text: "Ele ainda consegue realizar atividades cotidianas sozinho, embora com mais dificuldade? (Fundamental para distinção com demência)" },
+          { cat: "Preocupação subjetiva", text: "O próprio paciente se queixa de falhas de memória ou de raciocínio? (Queixa subjetiva é um sinal de alerta)" }
+        ]
+      },
+      {
+        name: "Delirium",
+        cid10: "F05",
+        cid11: "6D70",
+        criteria: {
+          required: [
+            { text: "Perturbação da atenção (capacidade reduzida de direcionar, focalizar, manter e mudar a atenção) e da consciência (orientação reduzida ao ambiente)" },
+            { text: "A perturbação se desenvolve em um curto período de tempo (horas a dias) e tende a flutuar ao longo do dia" },
+            { text: "Perturbação cognitiva adicional (déficit de memória, desorientação, linguagem, habilidade visuoespacial ou percepção)" }
+          ],
+          duration: [],
+          exclusions: [
+            { text: "As perturbações não são mais bem explicadas por outro transtorno neurocognitivo pré-existente, estabelecido ou em evolução" },
+            { text: "Ocorre no contexto de nível gravemente diminuído de excitação, como coma" }
+          ]
+        },
+        questions: [
+          { cat: "Início e flutuação", text: "Os sintomas começaram de forma aguda (horas a dias)? Pioram à noite? Há melhoras e pioras no mesmo dia?" },
+          { cat: "Causa subjacente", text: "SEMPRE investigar: infecção, distúrbio metabólico, medicamentos, privação de sono, imobilização, cirurgia recente, TIH, AVC" },
+          { cat: "Subtipo", text: "Hiperativo (agitado, alucinado), hipoativo (quieto, sonolento — frequentemente subdiagnosticado) ou misto?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 14,
+    title: "Transtornos da Personalidade",
+    color: "#b8a0e8",
+    disorders: [
+      {
+        name: "Transtorno da Personalidade Borderline (Limítrofe)",
+        cid10: "F60.3",
+        cid11: "6D11.5",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de instabilidade das relações interpessoais, da autoimagem e dos afetos, e impulsividade acentuada, iniciando no começo da idade adulta, presente em vários contextos, indicado por ≥5 dos seguintes:\n1. Esforços desesperados para evitar abandono real ou imaginado\n2. Padrão de relações interpessoais instáveis e intensas\n3. Perturbação da identidade: instabilidade acentuada e persistente da autoimagem\n4. Impulsividade em ≥2 áreas potencialmente autodestrutivas\n5. Comportamento, gestos ou ameaças recorrentes de automutilação ou suicídio\n6. Instabilidade afetiva intensa com reatividade de humor\n7. Sentimentos crônicos de vazio\n8. Raiva intensa e inapropriada ou dificuldade em controlá-la\n9. Ideação paranoide transitória ou sintomas dissociativos graves relacionados ao estresse" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Abandono", text: "Você tem um medo intenso de ser abandonado ou rejeitado? Faz coisas impulsivas para evitar isso?" },
+          { cat: "Relacionamentos", text: "Seus relacionamentos são intensos e instáveis, alternando entre idealização e desvalorização das pessoas?" },
+          { cat: "Identidade", text: "Você tem uma imagem de si mesmo muito instável? Muda de valores, objetivos, sexualidade ou tipo de amigos frequentemente?" },
+          { cat: "Impulsividade e autolesão", text: "Você tem comportamentos impulsivos que se arrependeu (gastos, sexo, substâncias)? Já se machucou propositalmente?" },
+          { cat: "Humor e vazio", text: "Seu humor muda muito rapidamente, com episódios de disforia intensa? Tem sentimentos crônicos de vazio?" },
+          { cat: "Raiva", text: "Você tem episódios de raiva intensa desproporcional, difíceis de controlar?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Narcisista",
+        cid10: "F60.81",
+        cid11: "6D10.6",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de grandiosidade (em fantasia ou comportamento), necessidade de admiração e falta de empatia, iniciando no começo da idade adulta, presente em vários contextos, com ≥5 dos seguintes:\n1. Sentido grandioso da própria importância\n2. Preocupação com fantasias de sucesso ilimitado, poder, brilhantismo, beleza\n3. Acredita ser 'especial' e único\n4. Requer admiração excessiva\n5. Senso de direito/prerrogativa\n6. Interpessoalmente explorador\n7. Falta de empatia\n8. Frequentemente invejoso dos outros ou acredita ser alvo de inveja\n9. Demonstra comportamentos ou atitudes arrogantes" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Grandiosidade vs. fragilidade", text: "Você se sente superior à maioria das pessoas? Como reage quando é criticado ou não reconhecido? (Raiva narcísica)" },
+          { cat: "Relacionamentos", text: "Você se importa com os sentimentos dos outros ou os relacionamentos são principalmente instrumentais?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Histriônica",
+        cid10: "F60.4",
+        cid11: "6D10.4",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de emocionalidade excessiva e busca de atenção, com ≥5 dos seguintes: desconfortável quando não é o centro das atenções; interações frequentemente caracterizadas por comportamento sexualmente sedutor ou provocativo; expressão emocional superficial e rapidamente mutável; usa consistentemente a aparência física para chamar atenção; estilo de fala excessivamente impressionista; mostra autodramatização, teatralidade e expressão exagerada de emoção; facilmente sugestionável; considera relacionamentos mais íntimos do que realmente são" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Dramatização", text: "Você sente que suas emoções são expressas de forma mais intensa que a maioria das pessoas? Se incomoda quando não está no centro da atenção?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Obsessivo-Compulsiva (TPOC)",
+        cid10: "F60.5",
+        cid11: "6D10.8",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de preocupação com organização, perfeccionismo e controle mental/interpessoal, à custa de flexibilidade e eficiência, com ≥4 dos seguintes: preocupação com detalhes/regras/listas ao ponto de se perder o ponto principal; perfeccionismo que interfere na conclusão das tarefas; excessivamente devotado ao trabalho; excessivamente consciencioso, escrupuloso e inflexível sobre ética e valores; incapaz de descartar objetos sem valor sentimental; relutante em delegar; adota um estilo mesquinho; rigidez e teimosia" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Distinguir de TOC: TPOC é padrão de personalidade ego-sintônico, sem obsessões e compulsões egodistônicas típicas" }]
+        },
+        questions: [
+          { cat: "Perfeccionismo", text: "O perfeccionismo já impediu você de concluir projetos, pois nunca estão 'bons o bastante'? Dificuldade em delegar tarefas?" },
+          { cat: "Rigidez", text: "Você tem dificuldade em adaptar planos, é muito inflexível com regras, é muito meticuloso com detalhes?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Paranoide",
+        cid10: "F60.0",
+        cid11: "6D10.0",
+        criteria: {
+          required: [
+            { text: "Desconfiança e suspeita difusas, com ≥4 dos seguintes: suspeita sem base de ser explorado, prejudicado ou enganado; preocupação com dúvidas injustificadas acerca da lealdade; relutância em confidenciar por medo de uso malicioso; lê significados ocultos em observações inocentes; carrega rancor persistente; percebe ataques ao seu caráter que não são aparentes aos outros; suspeitas recorrentes sem justificativa acerca da fidelidade do parceiro" }
+          ],
+          duration: [],
+          exclusions: [{ text: "Não ocorre exclusivamente durante esquizofrenia, TB ou depressão com psicose, e não é causado por condição médica" }]
+        },
+        questions: [
+          { cat: "Desconfiança", text: "Você costuma desconfiar das motivações dos outros, mesmo sem evidências? Tem dificuldade em confiar em pessoas próximas?" },
+          { cat: "Intensidade paranoia", text: "Isso dificulta relacionamentos? As pessoas reclamam que você é muito desconfiado ou guarda rancor?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Esquizoide",
+        cid10: "F60.1",
+        cid11: "6D10.1",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de distanciamento de relações sociais e faixa restrita de expressão de emoções no ambiente interpessoal, com ≥4 dos seguintes: não deseja nem aprecia relações próximas; quase sempre escolhe atividades solitárias; pouco interesse em experiências sexuais; prazer em poucas ou em nenhuma atividade; falta de amigos; aparenta indiferente à elogio ou crítica; mostra frieza emocional, distanciamento ou afeto empobrecido" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Solidão egossintônica", text: "Você prefere passar a maior parte do tempo sozinho? Relações próximas lhe parecem desnecessárias ou desconfortáveis?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Evitativa",
+        cid10: "F60.6",
+        cid11: "6D10.3",
+        criteria: {
+          required: [
+            { text: "Padrão difuso de inibição social, sentimentos de inadequação e hipersensibilidade à avaliação negativa, com ≥4 dos seguintes: evita atividades ocupacionais com contato interpessoal significativo; relutante em envolver-se com pessoas sem certeza de agradar; reservado em relações íntimas pelo medo de vergonha; preocupado com ser criticado ou rejeitado; inibido em novas situações interpessoais; vê a si mesmo como socialmente incapaz; relutante em assumir riscos pessoais" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Desejo de relacionamento", text: "Você quer ter amigos e relacionamentos, mas o medo de rejeição/julgamento impede? (Distingue do esquizoide, que não deseja)" },
+          { cat: "Autoimagem", text: "Como você se vê em relação aos outros? Sente-se inferior, inadequado, pouco atraente socialmente?" }
+        ]
+      },
+      {
+        name: "Transtorno da Personalidade Dependente",
+        cid10: "F60.7",
+        cid11: "6D10.9",
+        criteria: {
+          required: [
+            { text: "Necessidade difusa e excessiva de ser cuidado, levando a comportamento submisso e apegado e temores de separação, com ≥5 dos seguintes: dificuldade em tomar decisões cotidianas sem aconselhamento excessivo; necessita que outros assumam responsabilidade pelas principais áreas da sua vida; dificuldade em discordar por medo de perder apoio; dificuldade em iniciar projetos; vai a excessos para obter carinho e apoio; sente-se desamparado quando sozinho; busca urgentemente outro relacionamento quando um próximo termina; preocupação irracional com ser deixado para cuidar de si mesmo" }
+          ],
+          duration: [],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Dependência nas decisões", text: "Você tem dificuldade em tomar decisões sozinho, buscando constante aprovação e orientação dos outros?" },
+          { cat: "Tolerância ao abuso", text: "Já permaneceu em relacionamentos prejudiciais ou abusivos por medo de ficar sozinho?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 15,
+    title: "Transtornos Neurocognitivos — Etiologias Específicas",
+    color: "#7ac4d4",
+    disorders: [
+      { name: "Doença de Alzheimer", cid10: "G30.9", cid11: "6D80.00", criteria: { required: [{ text: "Declínio insidioso e gradual da memória episódica e de outros domínios cognitivos. Fase prodrômica: CCL amnéstico. Critérios NIA-AA 2011: síndrome clínica + biomarcadores (PET amiloide, tau no LCR, atrofia hipocampal na RM). Padrão mais comum: amnésia anterógrada proeminente, seguida de dificuldades de linguagem e praxia" }], duration: [], exclusions: [{ text: "Excluir: demência vascular, DCL, DFT, hidrocefalia, depressão pseudodemência" }] }, questions: [{ cat: "Memória episódica", text: "A queixa inicial foi de esquecimento de eventos recentes, repetição de perguntas, dificuldade em aprender novas informações? A memória remota está mais preservada que a recente?" }, { cat: "Progressão", text: "O início foi insidioso e a progressão gradual e contínua? (Típico do Alzheimer — oposto à demência vascular escalonada)" }] },
+      { name: "Demência Vascular", cid10: "F01.50", cid11: "6D80.1", criteria: { required: [{ text: "Declínio neurocognitivo com relação temporal com evento cerebrovascular; ou evidências de doença cerebrovascular por neuroimagem. Perfil cognitivo: proeminência de déficits executivos e atencionais sobre a memória" }], duration: [], exclusions: [] }, questions: [{ cat: "Curso", text: "O declínio cognitivo ocorreu em degraus, com piora súbita após episódios vasculares? Há história de AVC, AIT, hipertensão, fibrilação atrial?" }] },
+      { name: "Demência com Corpos de Lewy (DCL)", cid10: "G31.83", cid11: "6D80.20", criteria: { required: [{ text: "Declínio cognitivo progressivo + características centrais: flutuação cognitiva (variação na atenção e alerta); alucinações visuais recorrentes bem-formadas e detalhadas; parkinsonismo espontâneo; transtorno comportamental do sono REM (TCS-REM)" }], duration: [], exclusions: [] }, questions: [{ cat: "Flutuação", text: "O paciente tem episódios de confusão intensa alternando com períodos de maior lucidez, às vezes no mesmo dia?" }, { cat: "Alucinações", text: "Tem alucinações visuais bem formadas (pessoas, animais) sem angústia? Gesticula ou fala durante o sono? (TCS-REM)" }, { cat: "Parkinsonismo", text: "Há rigidez, bradicinesia, marcha lenta ou tremor? Os sintomas parkinsonianos surgiram junto com ou após o declínio cognitivo?" }] },
+      { name: "Demência Frontotemporal (DFT)", cid10: "G31.09", cid11: "6D80.30", criteria: { required: [{ text: "Variante comportamental: mudança precoce e progressiva de personalidade e comportamento (desinibição, apatia, perda de empatia, comportamentos perseverativos/compulsivos, hiperoralidade). Variantes de linguagem: afasia progressiva primária (semântica ou agramática)" }], duration: [], exclusions: [] }, questions: [{ cat: "Mudança de personalidade", text: "Houve mudança de personalidade precoce: desinibição, falta de vergonha, comportamentos socialmente inadequados, apatia profunda, perda de empatia?" }, { cat: "Memória preservada", text: "A memória episódica está relativamente preservada no início? (Diferencia da DA, onde memória é o primeiro déficit)" }] }
+    ]
+  },
+  {
+    id: 16,
+    title: "Disfunções Sexuais",
+    color: "#e8c47a",
+    disorders: [
+      { name: "Transtorno do Desejo Sexual Hipoativo Masculino", cid10: "F52.0", cid11: "HA00", criteria: { required: [{ text: "Deficiência ou ausência persistente ou recorrente de fantasias/pensamentos sexuais e desejo por atividade sexual, presente por ≥6 meses, causando sofrimento clinicamente significativo" }], duration: [], exclusions: [] }, questions: [{ cat: "Desejo", text: "Com que frequência você tem pensamentos ou fantasias sexuais? Houve mudança em relação ao passado?" }] },
+      { name: "Transtorno Erétil", cid10: "F52.21", cid11: "HA01", criteria: { required: [{ text: "Dificuldade em obter ou manter ereção adequada até a conclusão da atividade sexual, presente em ≥75% das ocasiões por ≥6 meses, causando sofrimento significativo" }], duration: [], exclusions: [] }, questions: [{ cat: "Contexto", text: "A disfunção ocorre em todos os contextos (masturbação, com parceiro) ou só com o parceiro? Há ereções matinais? (Orgânica vs. psicogênica)" }] },
+      { name: "Ejaculação Precoce", cid10: "F52.4", cid11: "HA02", criteria: { required: [{ text: "Ejaculação ocorrendo durante a atividade sexual com o parceiro antes ou logo após a penetração vaginal, aproximadamente dentro de 1 minuto, antes que o indivíduo deseje; presente em ≥75% das ocasiões por ≥6 meses; causando sofrimento significativo" }], duration: [], exclusions: [] }, questions: [{ cat: "Latência", text: "Quanto tempo em média até a ejaculação após a penetração? Acontece desde sempre (lifelong) ou se desenvolveu (acquired)?" }] },
+      { name: "Transtorno do Orgasmo Feminino", cid10: "F52.31", cid11: "HA20", criteria: { required: [{ text: "Atraso, infrequência ou ausência acentuados de orgasmo; ou intensidade de sensação orgásmica marcadamente reduzida; presente em ≥75% das situações por ≥6 meses" }], duration: [], exclusions: [] }, questions: [{ cat: "Orgasmo", text: "Você consegue atingir orgasmo através de masturbação? E com parceiro? Em quais circunstâncias?" }] }
+    ]
+  },
+  {
+    id: 17,
+    title: "Disforia de Gênero",
+    color: "#d4c080",
+    disorders: [
+      {
+        name: "Disforia de Gênero (Adultos e Adolescentes)",
+        cid10: "F64.0",
+        cid11: "HA60",
+        criteria: {
+          required: [
+            { text: "Incongruência acentuada entre o gênero que a pessoa experiencia/expressa e o gênero designado ao nascimento, de pelo menos 6 meses de duração, manifestada por ≥2 dos seguintes:\n— Incongruência acentuada entre o gênero experienciado/expresso e as características sexuais primárias e/ou secundárias\n— Desejo intenso de se desfazer das características sexuais primárias e/ou secundárias\n— Desejo intenso de ter as características sexuais do outro gênero\n— Desejo intenso de ser do outro gênero\n— Desejo intenso de ser tratado como o outro gênero\n— Convicção intensa de que tem os sentimentos e reações típicos do outro gênero" }
+          ],
+          duration: [{ text: "A condição está associada a sofrimento clinicamente significativo ou prejuízo no funcionamento" }],
+          exclusions: []
+        },
+        questions: [
+          { cat: "Experiência de gênero", text: "Desde quando você sente que seu gênero interno é diferente do que lhe foi atribuído ao nascer? Como você descreveria sua identidade de gênero?" },
+          { cat: "Sofrimento", text: "O sofrimento relacionado a isso afeta seu funcionamento, saúde mental, relacionamentos?" },
+          { cat: "Objetivos e necessidades", text: "Quais são suas necessidades e objetivos atuais em relação à sua identidade de gênero?" }
+        ]
+      }
+    ]
+  },
+  {
+    id: 18,
+    title: "Outros Transtornos do DSM-5-TR",
+    color: "#8ab8d4",
+    disorders: [
+      { name: "Transtorno de Déficit de Atenção Inativo (TDAH-D)", cid10: "F90.0", cid11: "6A05.0", criteria: { required: [{ text: "Critérios do TDAH, especificador de apresentação predominantemente desatenta. ≥6 sintomas de desatenção (≥5 em adultos ≥17 anos), sem preenchimento dos critérios de hiperatividade-impulsividade" }], duration: [], exclusions: [] }, questions: [{ cat: "Desatenção sem hiperatividade", text: "Sonhador, perde-se nos pensamentos, comete erros por descuido, esquecido — sem agitação motora?" }] },
+      { name: "Transtorno de Ansiedade Induzida por Substância/Medicamento", cid10: "F19.180", cid11: "6C4H", criteria: { required: [{ text: "Ataques de pânico ou ansiedade proeminentes desenvolvidos durante ou logo após intoxicação ou abstinência, ou após exposição a medicamento capaz de produzir esses sintomas" }], duration: [], exclusions: [] }, questions: [{ cat: "Relação temporal", text: "A ansiedade surgiu ou piorou após início de medicamento (estimulantes, corticoide, broncodilatador, cafeína) ou uso/abstinência de substância?" }] },
+      { name: "Transtorno de Movimento Induzido por Medicamento (Acatisia)", cid10: "G25.71", cid11: "5C83.3", criteria: { required: [{ text: "Queixas subjetivas de inquietação, frequentemente acompanhadas de movimentos observados (balanço perna a perna, incapacidade de sentar/ficar parado), surgindo após uso ou aumento de dose de antipsicótico ou antidepressivo" }], duration: [], exclusions: [] }, questions: [{ cat: "Inquietação interna", text: "Você sente necessidade irresistível de mover as pernas ou de se levantar? Isso começou após mudança de medicamento?" }] },
+      { name: "Transtorno de Tourette / Transtorno de Tiques Crônicos", cid10: "F95.1", cid11: "8A05.01", criteria: { required: [{ text: "Tiques motores múltiplos ou vocais persistentes por >1 ano, com início antes dos 18 anos. Para Tourette: tiques motores múltiplos E pelo menos 1 tique vocal, não necessariamente ao mesmo tempo" }], duration: [], exclusions: [] }, questions: [{ cat: "Precursores sensoriais", text: "Antes do tique, sente uma 'vontade' ou sensação que é aliviada quando o tique ocorre? (Urge premonitório — característico de tiques)" }] }
+    ]
+  }
+];
+
+let allDisorders = [];
+DATA.forEach(g => {
+  g.disorders.forEach(d => {
+    allDisorders.push({ ...d, groupTitle: g.title, groupColor: g.color });
+  });
+});
+document.getElementById('statDisorders').textContent = allDisorders.length;
+
+function getColor(idx) {
+  const colors = ['#4a90d9','#9b7de8','#f5a623','#4a8fc4','#2ecba0','#e88fad','#d4876b','#8ecfc4','#c4a862','#e87a7a','#7ab8e8','#d4a0c8','#91d47c','#6bc9e0','#b8a0e8','#e8c47a','#d4c080','#7ac4d4','#8ab8d4','#e8c47a'];
+  return colors[idx % colors.length];
+}
+
+function hexAlpha(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function renderCriteria(criteria) {
+  let html = '';
+  const cats = [
+    { key: 'required', label: 'Critérios Diagnósticos', cls: 'req req-list' },
+    { key: 'duration', label: 'Duração / Impacto Funcional', cls: 'dur dur-list' },
+    { key: 'exclusions', label: 'Exclusões / Especificadores', cls: 'exc exc-list' }
+  ];
+  cats.forEach(cat => {
+    const items = criteria[cat.key];
+    if (!items || items.length === 0) return;
+    html += `<div class="criteria-section">
+      <div class="criteria-label ${cat.cls.split(' ')[0]}">${cat.label}</div>
+      <ul class="crit-list ${cat.cls.split(' ')[1]}">
+        ${items.map((item, i) => `<li>${cat.key === 'required' && items.length > 1 ? `<span class="crit-num">${i+1}.</span>` : ''}${item.text.replace(/\n/g, '<br>')}</li>`).join('')}
+      </ul>
+    </div>`;
+  });
+  if (!html) html = `<div class="placeholder">Critérios ainda não preenchidos. Adicione a partir do seu PDF.</div>`;
+  return html;
+}
+
+function renderQuestions(questions) {
+  if (!questions || questions.length === 0) {
+    return `<div class="placeholder">Perguntas-chave ainda não preenchidas.</div>`;
+  }
+  return `<div class="q-list">${questions.map(q => `
+    <div class="q-item">
+      <div class="q-category">${q.cat}</div>
+      <div class="q-text">${q.text}</div>
+    </div>`).join('')}</div>`;
+}
+
+function buildGroupsHTML() {
+  const container = document.getElementById('groupsContainer');
+  container.innerHTML = DATA.map((group, gi) => {
+    const color = getColor(gi);
+    const numColor = hexAlpha(color, 0.15);
+    const disordersHTML = group.disorders.map((d, di) => {
+      const uid = `g${gi}d${di}`;
+      return `
+        <div class="disorder-item" id="${uid}">
+          <div class="disorder-header" onclick="toggleDisorder('${uid}')">
+            <span class="disorder-name">${d.name}</span>
+            <div class="codes">
+              ${d.cid10 ? `<span class="code code-10">CID-10: ${d.cid10}</span>` : ''}
+              ${d.cid11 ? `<span class="code code-11">CID-11: ${d.cid11}</span>` : ''}
+            </div>
+            <svg class="d-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="disorder-body">
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab(event, '${uid}', 'crit')">Critérios DSM-5-TR</button>
+              <button class="tab-btn" onclick="switchTab(event, '${uid}', 'quest')">Perguntas-Chave</button>
+            </div>
+            <div class="tab-panel active" id="${uid}-crit">
+              ${renderCriteria(d.criteria)}
+            </div>
+            <div class="tab-panel" id="${uid}-quest">
+              ${renderQuestions(d.questions)}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="group-block" id="group${gi}">
+        <div class="group-header" onclick="toggleGroup('group${gi}')">
+          <div class="group-num" style="background:${numColor};color:${color}">${gi+1}</div>
+          <div class="group-title">
+            <h2>${group.title}</h2>
+            <span>${group.disorders.length} transtorno${group.disorders.length !== 1 ? 's' : ''}</span>
+          </div>
+          <svg class="group-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="group-body">${disordersHTML}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleGroup(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleDisorder(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function switchTab(event, uid, tab) {
+  const body = document.getElementById(uid).querySelector('.disorder-body');
+  body.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  body.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`${uid}-${tab}`).classList.add('active');
+}
+
+// SEARCH
+const searchInput = document.getElementById('searchInput');
+const groupsContainer = document.getElementById('groupsContainer');
+const searchContainer = document.getElementById('searchContainer');
+const searchResults = document.getElementById('searchResults');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  if (q.length < 2) {
+    groupsContainer.style.display = '';
+    searchContainer.style.display = 'none';
+    return;
+  }
+  groupsContainer.style.display = 'none';
+  searchContainer.style.display = 'block';
+
+  const matches = allDisorders.filter(d =>
+    d.name.toLowerCase().includes(q) ||
+    (d.cid10 && d.cid10.toLowerCase().includes(q)) ||
+    (d.cid11 && d.cid11.toLowerCase().includes(q)) ||
+    d.groupTitle.toLowerCase().includes(q)
+  );
+
+  function hl(text) {
+    const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  if (matches.length === 0) {
+    searchResults.innerHTML = '<div class="no-results">Nenhum transtorno encontrado para essa busca.</div>';
+    return;
+  }
+
+  searchResults.innerHTML = `<div class="search-results">${matches.map((d, i) => `
+    <div class="search-result" onclick="goToDisorder(${JSON.stringify(d.name)})">
+      <div class="sr-name">${hl(d.name)}</div>
+      <div class="sr-group">${hl(d.groupTitle)}</div>
+      <div class="sr-codes">
+        ${d.cid10 ? `<span class="code code-10">CID-10: ${d.cid10}</span>` : ''}
+        ${d.cid11 ? `<span class="code code-11">CID-11: ${d.cid11}</span>` : ''}
+      </div>
+    </div>`).join('')}
+  </div>`;
+});
+
+function goToDisorder(name) {
+  searchInput.value = '';
+  groupsContainer.style.display = '';
+  searchContainer.style.display = 'none';
+
+  for (let gi = 0; gi < DATA.length; gi++) {
+    for (let di = 0; di < DATA[gi].disorders.length; di++) {
+      if (DATA[gi].disorders[di].name === name) {
+        const groupEl = document.getElementById(`group${gi}`);
+        const disorderEl = document.getElementById(`g${gi}d${di}`);
+        groupEl.classList.add('open');
+        disorderEl.classList.add('open');
+        setTimeout(() => {
+          disorderEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+        return;
+      }
+    }
+  }
+}
+
+buildGroupsHTML();
+</script>
+</body>
+</html>
